@@ -3,14 +3,14 @@ project:
   output-dir: docs
 
 website:
-  title: "OBO ~ Data"
+  title: "OldBaileyOnline ~ Data"
   navbar:
     left:
       - href: index.qmd
         text: Home
     right:
       - icon: github
-        href: https://github.com/sharonhoward
+        href: https://github.com/sharonhoward/obo
         aria-label: Github
 
   page-footer: "Site created by [Sharon Howard](https://sharonhoward.org) with [Quarto](https://quarto.org/)"

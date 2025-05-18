@@ -18,5 +18,7 @@ This website is a resource for users of the [Old Bailey Online](https://www.oldb
 
 I plan to write guides to using the [OBO API](https://www.oldbaileyonline.org/about/api), as well as useful tools and methods for processing data obtained via the API.
 
+Code and data will also be available from the [Github repository](https://github.com/sharonhoward/obo)
+
 
 ## Notes
