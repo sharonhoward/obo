@@ -53,7 +53,7 @@
     "href": "index.html",
     "title": "Old Bailey Online for Data Analysis",
     "section": "",
-    "text": "This website is a resource for users of the Old Bailey Online who are interested in Digital Humanities, Data Science and computational approaches to the OBO’s complex data.\nI plan to write guides to using the OBO API, as well as useful tools and methods for processing data obtained via the API."
+    "text": "This website is a resource for users of the Old Bailey Online who are interested in Digital Humanities, Data Science and computational approaches to the OBO’s complex data.\nI plan to write guides to using the OBO API, as well as useful tools and methods for processing data obtained via the API.\nCode and data will also be available from the Github repository"
   },
   {
     "objectID": "index.html#notes",
