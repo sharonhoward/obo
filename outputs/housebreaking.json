@@ -1,0 +1,136 @@
+{
+  "took": [6],
+  "timed_out": [false],
+  "_shards": {
+    "total": [5],
+    "successful": [5],
+    "skipped": [0],
+    "failed": [0]
+  },
+  "hits": {
+    "total": [14],
+    "max_score": {},
+    "hits": [
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxEMKr-Pld_y58Rz-WX",
+        "_source": {
+          "idkey": "t17000115-17",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000115002.gif"],
+          "text": "Anne Buckler and Elizabeth Jefferys , both of the Parish of St. Andrews Holborne , the first was Indicted as Principal, and the other as Accessary before the Fact committed, for breaking the House of Thomas Beckenson , on the 9th of December last, with an Intention to steal his Goods . The Evidence not being sufficient to Convict the Principal they were both acquitted .",
+          "title": "Anne Buckler. Elizabeth Jefferys. Theft; housebreaking. 15th January 1700."
+        },
+        "sort": [-8519126400000, 17]
+      },
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxEMKr-Pld_y58Rz-Wb",
+        "_source": {
+          "idkey": "t17000115-21",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000115003.gif"],
+          "text": "Sarah Impey , of the Parish of St. Mary Islington , was Indicted for breaking the dwelling House of Mary Urlin Widow in the Day time, on the 24th of December last, no Person being therein, and taking thence two Holland Smocks, a Flaxen Table cloath and 20 s. in Moneys numbred . The Evidence against her being not sufficient to Convict her, she was acquitted .",
+          "title": "Sarah Impey. Theft; housebreaking. 15th January 1700."
+        },
+        "sort": [-8519126400000, 21]
+      },
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxEMsJtPld_y58R0LY1",
+        "_source": {
+          "idkey": "t17000828-4",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000828001.gif"],
+          "text": "Jane Wilson of the Parish of St. Andrews Holbourn , was Indicted for Felony and Robbery, for Robbing the House of Jeremy Deere , in the Day time, and putting Elizabeth his Wife in fear on the 18th of August last, and taking thence 2 Holland Shirts, 8 Smocks a Silver Fringe, and Divers other Goods . The Prosecutors Wife deposed that she sitting below Stairs in the Kitchen heard a great noise above, upon which she went into the Street and called some People to her assistance, who coming, found the",
+          "title": "Jane Wilson. Theft; housebreaking. 28th August 1700."
+        },
+        "sort": [-8499686400000, 4]
+      },
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxEMsJtPld_y58R0LY-",
+        "_source": {
+          "idkey": "t17000828-13",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000828002.gif"],
+          "text": "Mary Jones , of the Parish of Stepny , was Indicted for Felony and Robbery for breaking the House of Edward Owen , on the 20th of July last, about 2 in the Afternoon, and taking thence a Danmask Gown and Petticoat, a Monair Petticoat, a Shirt, 3 Smocks, A laced Handkerchief, a Serge Manlte, and 11 s. in Money . Mr. Owen said that he lost some Goods, but who took them he knew not; but his Wife deposed that she went out with her Child into the Feilds to quiet it, she lockt her Door; but when she c",
+          "title": "Mary Jones. Theft; housebreaking. 28th August 1700."
+        },
+        "sort": [-8499686400000, 13]
+      },
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxEMsJtPld_y58R0LY_",
+        "_source": {
+          "idkey": "t17000828-14",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000828002.gif"],
+          "text": "Elizabeth Barnet and Ellinor Dic , both of the Parish of St. Leonard Shoreditch , were Indicted for breaking the House of Thomas Drew , on the 22d of July last, in the Day time no Person being therein, and taking thence a Hood, a Flaxen Sheet, a lac'd Cap, and 6 Pewter Spoons . The Prosecutors Wife deposed that she went down to the Alley Gate, and was not gone above half a quarter of an Hour, and coming back found the two Prisoners in her House, and the Goods bundled up, and that they were for m",
+          "title": "Elizabeth Barnet. Ellinor Dic. Theft; housebreaking. 28th August 1700."
+        },
+        "sort": [-8499686400000, 14]
+      },
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxEMsJtPld_y58R0LZN",
+        "_source": {
+          "idkey": "t17000828-28",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000828003.gif"],
+          "text": "William King , of the Parish of Wilsdon was Indicted for breaking the House of Henry Forster on the 23d of August last, in the Day time, no Person being therein, and taking thence a Cloath Coat, a Wastcoat, the Goods of Henry Forster, and 2 Coats, a Frock and other Goods of John Payne , and a Damask stuff Gown, the Goods of Elizabeth Gage , Spinster . It appeared that he broke the Wall and got into the House, and took the Goods and carried them into a Wood, where they were found bundled up, and ",
+          "title": "William King. Theft; housebreaking, Theft; housebreaking. 28th August 1700."
+        },
+        "sort": [-8499686400000, 28]
+      },
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxELPgyPld_y58RzoJC",
+        "_source": {
+          "idkey": "t17000828-29",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000828003.gif", "https://www.dhi.ac.uk/san/ob/1700s/17000828004.gif"],
+          "text": "Thomas Thompson , of the Parish of St. James Westminster , was Indicted for breaking the House of William Argent , on the 23d of July last, in the day time, no Person being therein, and taking thence a Brass Kettle a Copper Pot, 9 Pewter Plates, a pair of Shag Breeches, and 4 Pewter Dishes . The Prosecutor deposed that his Maid coming home found the Prisoner coming out with the Goods, and saw the Kettle upon his Head; upon whichshe followed him and cried out stop him, and he dropt the things, an",
+          "title": "Thomas Thompson. Theft; housebreaking. 28th August 1700."
+        },
+        "sort": [-8499686400000, 29]
+      },
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxEMcRTPld_y58R0FKa",
+        "_source": {
+          "idkey": "t17021014-5",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17021014002.gif"],
+          "text": "Elizabeth Price , of the Parish of St. Dunstans in the West , was indicted for breaking the Dwelling-house of John Lang , in the Day time, no Person being therein, on the 7th of October last, about two in the Afternoon, and taking thence a Serge Counterpain, and other Goods of the said Lang . The first Evidence deposed that he had an occasion to go to a Gentlemans Chamber in the Temple, and did mistake the Stair-Case, and going up four pair of Stairs he saw a hole broke at three pair of Stairs, ",
+          "title": "Elizabeth Price. Theft; housebreaking. 14th October 1702."
+        },
+        "sort": [-8432553600000, 5]
+      },
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxEMcRTPld_y58R0FKe",
+        "_source": {
+          "idkey": "t17021014-9",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17021014002.gif"],
+          "text": "Elizabeth Stephens , of the Parish of St. Martins in the Fields , was indicted for breaking the House of Daniel Saxton in the Day time, about 7 in the Afternoon, on the 14th of July last, no Person being therein, and taking thence a Stuff Wastcoat and a pair of Breeches of Rich. Davis , and a pair of Sheets and Blankets, the Goods of the said Saxton . The Evidence deposed that his Room was robbed and in pursuit he took the Prisoner in the Passage. She denied the Fact, and nothing being found upo",
+          "title": "Elizabeth Stephens. Theft; housebreaking. 14th October 1702."
+        },
+        "sort": [-8432553600000, 9]
+      },
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxEMcRTPld_y58R0FKo",
+        "_source": {
+          "idkey": "t17021014-19",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17021014003.gif"],
+          "text": "Thomas Twist , Jane Williams and Mary Buck , of the Parish of Chelsea , were indicted for breaking the House of William Stubbington , in the day time, on the 18th of July last, and taking a Copper, a pair of stuff Curtains, and divers other Goods . It appeared that the Door was broke open whilst the Prosecutor was gone out early to Market, and the Goods gone. There was other Evidence who saw the Women near the House, and saw one of them carry the Copper upon her Head, and the other the Bundles, ",
+          "title": "Thomas Twist. Jane Williams. Mary Buck. Theft; housebreaking. 14th October 1702."
+        },
+        "sort": [-8432553600000, 19]
+      }
+    ]
+  }
+}

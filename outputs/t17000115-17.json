@@ -1,0 +1,38 @@
+{
+  "took": [3],
+  "timed_out": [false],
+  "_shards": {
+    "total": [20],
+    "successful": [20],
+    "skipped": [0],
+    "failed": [0]
+  },
+  "hits": {
+    "total": [1],
+    "max_score": [10.2085],
+    "hits": [
+      {
+        "_index": "dhids_oldbailey_record",
+        "_type": "doc",
+        "_id": "AYxEMKr-Pld_y58Rz-WX",
+        "_score": 10.2085,
+        "_source": {
+          "metadata": "<table xmlns:dhids=\"https://www.dhi.ac.uk/data/\" class=\"table small\"><tbody><tr><th scope=\"row\">Text type<\/th><td>Trial account<\/td><\/tr><tr><th scope=\"row\">Defendants<\/th><td>Anne Buckler, Elizabeth Jefferys<\/td><\/tr><tr><th scope=\"row\">Offences<\/th><td><a href=\"../about/crimes#theft\">Theft<\/a> &gt; <a href=\"../about/crimes#housebreaking\">Housebreaking<\/a><\/td><\/tr><tr><th scope=\"row\">Session Date<\/th><td><a href=\"17000115#t17000115-17\">15th January 1700<\/a><\/td><\/tr><tr><th scope=\"row\">Reference Number<\/th><td>t17000115-17<\/td><\/tr><tr><th scope=\"row\">Verdicts<\/th><td><a href=\"../about/verdicts#notguilty\">Not guilty<\/a><\/td><\/tr><tr><th scope=\"row\">Navigation<\/th><td><a href=\"t17000115-16\">&lt; Previous section (Trial account)<\/a> | <a href=\"t17000115-18\">Next section (Trial account) &gt;<\/a><\/td><\/tr><\/tbody><\/table>",
+          "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000115002.gif"],
+          "exturl": "https://www.oldbaileyonline.org/browse.jsp?div=t17000115-17",
+          "citation": "<span><i>Old Bailey Proceedings Online<\/i> (www.oldbaileyonline.org, version 9.0) January 1700. Trial of Anne Buckler , Elizabeth Jefferys (t17000115-17).<\/span>",
+          "project": "oldbailey",
+          "collection": "record",
+          "title": "Anne Buckler. Elizabeth Jefferys. Theft; housebreaking. 15th January 1700.",
+          "image_titles": ["Proceedings of the Old Bailey, 15th January ."],
+          "idkey": "t17000115-17",
+          "navigation": "<span><a href=\"t17000115-16\">&lt; Previous section (Trial account)<\/a> | <a href=\"t17000115-18\">Next section (Trial account) &gt;<\/a><\/span>",
+          "xml": "<div1 type=\"trialAccount\" id=\"t17000115-17\"> <interp inst=\"t17000115-17\" type=\"prevdiv\" value=\"t17000115-16\" divtype=\"trialAccount\"/> <interp inst=\"t17000115-17\" type=\"nextdiv\" value=\"t17000115-18\" divtype=\"trialAccount\"/> <interp inst=\"t17000115-17\" type=\"div0\" value=\"17000115\" divtype=\"sessionsPaper\"/> <interp inst=\"t17000115-17\" type=\"collection\" value=\"BAILEY\"/> <interp inst=\"t17000115-17\" type=\"year\" value=\"1700\"/> <interp inst=\"t17000115-17\" type=\"uri\" value=\"sessionsPapers/17000115\"/> <interp inst=\"t17000115-17\" type=\"date\" value=\"17000115\"/> <xptr imgpath=\"ob/1700s/17000115002.gif\" imgtitle=\"Proceedings of the Old Bailey, 15th January .\" imgrights=\"This image is reproduced courtesy of the Bodleian Library, University of Oxford. Commercial use is prohibited without permission of the owner of the original.\" type=\"pageFacsimile\" value=\"preceding\" doc=\"17000115002\"/> <join result=\"criminalCharge\" id=\"t17000115-17-off87-c67\" targOrder=\"Y\" targets=\"t17000115-17-defend67 t17000115-17-off87 t17000115-17-verdict89\"/> <join result=\"criminalCharge\" id=\"t17000115-17-off87-c68\" targOrder=\"Y\" targets=\"t17000115-17-defend68 t17000115-17-off87 t17000115-17-verdict89\"/> <p> <persName id=\"t17000115-17-defend67\" type=\"defendantName\"> Anne Buckler <interp inst=\"t17000115-17-defend67\" type=\"surname\" value=\"Buckler\"/> <interp inst=\"t17000115-17-defend67\" type=\"given\" value=\"Anne\"/> <interp inst=\"t17000115-17-defend67\" type=\"gender\" value=\"female\"/> <\/persName> and <persName id=\"t17000115-17-defend68\" type=\"defendantName\"> Elizabeth Jefferys <interp inst=\"t17000115-17-defend68\" type=\"surname\" value=\"Jefferys\"/> <interp inst=\"t17000115-17-defend68\" type=\"given\" value=\"Elizabeth\"/> <interp inst=\"t17000115-17-defend68\" type=\"gender\" value=\"female\"/> <\/persName> , both of the Parish of <placeName id=\"t17000115-17-defloc86\">St. Andrews Holborne<\/placeName> <interp inst=\"t17000115-17-defloc86\" type=\"placeName\" value=\"St. Andrews Holborne\"/> <interp inst=\"t17000115-17-defloc86\" type=\"type\" value=\"defendantHome\"/> <join result=\"persNamePlace\" targOrder=\"Y\" targets=\"t17000115-17-defend67 t17000115-17-defloc86\"/> <interp inst=\"t17000115-17-defloc86\" type=\"defendantNameHome\" value=\"St. Andrews Holborne\"/> <join result=\"persNamePlace\" targOrder=\"Y\" targets=\"t17000115-17-defend68 t17000115-17-defloc86\"/> <interp inst=\"t17000115-17-defloc86\" type=\"defendantNameHome\" value=\"St. Andrews Holborne\"/>, the <rs id=\"t17000115-17-off87\" type=\"offenceDescription\"> <interp inst=\"t17000115-17-off87\" type=\"offenceCategory\" value=\"theft\"/> <interp inst=\"t17000115-17-off87\" type=\"offenceSubcategory\" value=\"housebreaking\"/> first was Indicted as Principal, and the other as Accessary before the Fact committed, for breaking the House of <interp inst=\"t17000115-17-victim69\" type=\"victims-institution\" value=\"no\"/> <interp inst=\"t17000115-17-victim69\" type=\"victims-hisco-code\" value=\"0\"/> <persName id=\"t17000115-17-victim69\" type=\"victimName\"> Thomas Beckenson <interp inst=\"t17000115-17-victim69\" type=\"surname\" value=\"Beckenson\"/> <interp inst=\"t17000115-17-victim69\" type=\"given\" value=\"Thomas\"/> <interp inst=\"t17000115-17-victim69\" type=\"gender\" value=\"male\"/> <join result=\"offenceVictim\" targOrder=\"Y\" targets=\"t17000115-17-off87 t17000115-17-victim69\"/> <\/persName> , on the <rs id=\"t17000115-17-cd88\" type=\"crimeDate\">9th of December<\/rs> <join result=\"offenceCrimeDate\" targOrder=\"Y\" targets=\"t17000115-17-off87 t17000115-17-cd88\"/> last, with an Intention to steal his Goods <\/rs>. The Evidence not being sufficient to Convict the Principal they were both <rs id=\"t17000115-17-verdict89\" type=\"verdictDescription\"> <interp inst=\"t17000115-17-verdict89\" type=\"verdictCategory\" value=\"notGuilty\"/> <interp inst=\"t17000115-17-verdict89\" type=\"verdictSubcategory\" value=\"notGuiltyNoDetail\"/> <interp inst=\"t17000115-17-verdict89\" type=\"plea\" value=\"notGuilty\"/> acquitted <\/rs>.<\/p> <\/div1>",
+          "html": "<div> <p> Anne Buckler and Elizabeth Jefferys , both of the Parish of St. Andrews Holborne , the first was Indicted as Principal, and the other as Accessary before the Fact committed, for breaking the House of Thomas Beckenson , on the 9th of December last, with an Intention to steal his Goods . The Evidence not being sufficient to Convict the Principal they were both acquitted .<\/p> <\/div>",
+          "text": "Anne Buckler and Elizabeth Jefferys , both of the Parish of St. Andrews Holborne , the first was Indicted as Principal, and the other as Accessary before the Fact committed, for breaking the House of Thomas Beckenson , on the 9th of December last, with an Intention to steal his Goods . The Evidence not being sufficient to Convict the Principal they were both acquitted .",
+          "image_rights": ["This image is reproduced courtesy of the Bodleian Library, University of Oxford. Commercial use is prohibited without permission of the owner of the original."]
+        }
+      }
+    ]
+  }
+}

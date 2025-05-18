@@ -1,0 +1,370 @@
+---
+title: "OBO API: search and download"
+description: "A worked example of searching and downloading data with R"
+date: "2025-05-18"
+author: "Sharon Howard"
+---
+
+
+## Introduction
+
+As part of a major overhaul and refresh of the [Old Bailey Online](https://www.oldbaileyonline.org/) in 2023, there were major breaking changes to the OBO API. The code here is for an example of downloading data from a simple search for one offence with a start and end year.
+
+See also the [overview of API features and changes](./intro-api.qmd).
+
+The notes assume some knowledge of R and the Tidyverse. Some of the key packages required are [httr](https://httr.r-lib.org/index.html), [purrr](https://purrr.tidyverse.org/), [rvest](https://rvest.tidyverse.org/) and [xml2](https://xml2.r-lib.org/).
+
+
+The steps involved are:
+
+- build a query url
+- fetch first page of results
+- if more than 1 page of results
+  - calculate number of queries needed
+  - build the query urls for the extra pages
+  - fetch the extra pages of results
+- pull trial IDs out of the results
+- build the per-ID single record URLs
+- fetch the single items (the slooooooow bit)
+- extract data (xml, text and metadata)
+- write the xml and text data to individual files
+- write the metadata table to a csv file
+
+The XML files downloaded by the code contain the complete (complex) tagging for each trial: offences, verdicts, sentences, names, locations, etc. The TXT files contain the plain text of trials. The metadata is a simplified summary of trial tagging.
+
+Note: I'm currently thinking about the best methods for running multiple searches when all you want is counts of results and may write another example for this.
+
+
+## Caveats
+
+### downloading is not going to be speedy
+
+Fetching trials data is likely to take a while if you have more than a handful of results. It's advisable to test how many results your search will return [on the website](https://www.oldbaileyonline.org/search/crime) before running any of this code. (More generally, the website is the best place to test out and refine queries for the API.)
+
+The code below deliberately includes a wait between downloads to be kind to the OBO server. You don't have to observe this but it will be very much appreciated if you do. (Apart from politeness, abuse of the servers *could* lead to getting yourself blocked.)
+
+
+### handling problems with queries
+
+If you ask for something invalid the API may not always fail in an obvious way (ie, error or 0 results); I recommend always checking the total hits for your query *before* you run any further code.
+
+If you ever see total hits **203163**, you have a problem. Basically, this number is the total results in the database; even if it was what you intended (it probably wasn't), you won't be able to get all your results because of the search limit (see the next point).
+
+If there are 0 results and you expected more, first check your query for typos, then check that the website is up and the same search works there. If either the website or the API server has gone down, you may have no choice but to wait for it to come back (especially if it's a weekend, sorry). If the problem really persists, especially if there's no obvious reason for it, [send an email](https://www.oldbaileyonline.org/about/contact).
+
+
+### search limit 
+
+As far as I know the API is not rate-limited BUT the search has a hard limit of 10000 results (from=9990). Anything after that causes a server error. If your search has more than 10000 results you'll have to split it up into several smaller searches (eg by date) and combine again afterwards.
+
+
+## Load packages and functions
+
+```{r}
+
+library(here)
+library(janitor)
+library(glue)
+
+library(httr)
+library(jsonlite)
+library(xml2)
+library(rvest)
+
+library(tidyverse)
+
+
+## functions
+
+# fetch json using jsonlite::fromJSON(), but slow it down with purrr::slowly() to be kind to the OBO server
+slow_json <- 
+  slowly(fromJSON, rate = rate_delay(4))
+
+
+## write xml files in a named folder (using the offence search term), one trial per file
+## NB: the function requires a folder named outputs/ in the project root   
+## but it will create subfolders if they don't already exist
+## it will be used inside purr::map(). the approach is adapted from 
+## https://martinctc.github.io/blog/vignette-write-and-read-multiple-excel-files-with-purrr/
+
+output_obo_xml <- function(data, names) {
+    
+  # using here() from the [here](https://here.r-lib.org/) package for file referencing
+  
+    folder_path <- here::here("outputs/xml") 
+    if (!dir.exists(folder_path)) {dir.create(folder_path)}
+    
+    folder_path_query <- paste(folder_path, query_offence, sep = "/")
+    if (!dir.exists(folder_path_query)) {dir.create(folder_path_query)}
+    
+    write_xml(data, paste0(folder_path_query, "/", names, ".xml"), options=c("format"))
+}
+
+# ditto, but for plain text files
+output_obo_txt <- function(data, names) {
+     
+    folder_path <- here::here("outputs/txt") 
+    if (!dir.exists(folder_path)) {dir.create(folder_path)}
+    
+    folder_path_query <- paste(folder_path, query_offence, sep = "/")
+    if (!dir.exists(folder_path_query)) {dir.create(folder_path_query)}
+    
+    write_file(data, paste0(folder_path_query, "/", names, ".txt") )
+}
+
+
+## turn "metadata" into a table
+# this is the summary info that appears at the top of each trial on the website
+# easier to work with than the xml  
+# BUT limited usefulness for complex trials (multiple defts/offences/verdicts/sentences).
+
+obo_metadata_table <- function(data){
+  data |>
+  html_table() |>
+  # pivot complains it's a list if you don't do this
+  as.data.frame() |> 
+  pivot_wider(names_from = X1, values_from = X2) |>
+  clean_names("snake") |>
+  select(-navigation)
+}
+
+
+```
+
+
+
+## Set up the query
+
+This example uses [housebreaking between 1700 and 1704](https://www.oldbaileyonline.org/search/crime?offence=housebreaking&year_gte=1700&year_lte=1704#results) (14 trials).
+
+See the [API documentation](https://www.oldbaileyonline.org/about/api) for the basics. But that is *very* basic; the aim of this example is to help fill in some of the gaps.
+
+As a general rule, it helps to know that API queries mirror website searches.
+
+The website search URL for the example (first ten results):
+
+https://www.oldbaileyonline.org/search/crime?offence=housebreaking&year_gte=1700&year_lte=1704#results
+
+The matching API query URL:
+
+https://www.dhi.ac.uk/api/data/oldbailey_record?offence=housebreaking&year_gte=1700&year_lte=1704
+
+
+```{r}
+# query_offence will be reused for the name of the folder to save files
+query_offence <- "housebreaking"
+query_start_year <- "1700"
+query_end_year <- "1704"
+
+# parse the search endpoint URL into its components
+query_url <-
+  parse_url("https://www.dhi.ac.uk/api/data/oldbailey_record")
+
+# add the query parameters
+query_url$query <- 
+  list(offence=query_offence,
+       year_gte=query_start_year,
+       year_lte=query_end_year 
+       )
+
+# turn it back into a URL incorporating the parameters
+search_url <- build_url(query_url)
+
+
+# endpoint url for single records (this doesn't need parsing)
+single_url <- "https://www.dhi.ac.uk/api/data/oldbailey_record_single"
+
+
+# run the search to get first page of results
+search_json <-
+  fromJSON(search_url)
+
+
+# how many hits?
+search_hits <-
+  search_json$hits$total
+
+# how many pages is that?
+search_pages <-
+  ceiling(search_hits/10)
+
+```
+
+
+It's a good idea to check that the number of results looks like what you expect before you start processing anything
+
+```{r}
+search_hits
+```
+
+```{r}
+#| include: false
+
+# saved search JSON for reference
+# write_json(search_json, here::here("outputs/housebreaking.json"), pretty=TRUE)
+
+## sample trial JSON saved for reference
+# sample_trial_json <-
+#   fromJSON(paste0(single_url, "?idkey=t17000115-17"))
+## write_json(sample_trial_json, here::here("outputs/t17000115-17.json"), pretty=TRUE)
+```
+
+
+## Download trials and save results
+
+This builds in a check to stop the process if there are either 0 results or more than 10,000 results (see note above on this API limit). As already noted, if your search has more than 10,000 results you'll have to split it up into smaller slices. 
+
+```{r}
+#| include: false
+
+# Note: if you've downloaded the .qmd file the next code chunk begins with an eval: false line which is there to prevent the chunk from executing when the page is rendered. You'll need to delete or comment out the line to run the code.
+```
+
+
+```{r}
+#| eval: false  
+
+# if 0 or >10000 results stop right now
+
+if (search_pages==0 | search_pages>1000) {
+   
+  "check number of results!"
+  
+# if 1-10000 results carry on...
+  
+} else {
+  
+  
+# extract IDs from the first page
+  
+search_ids_page1 <-
+search_json$hits$hits$`_source` |>
+      select(idkey, title, text)
+
+
+  # if only 1 page of results, just get IDs for those and make single record API URLs
+
+  if(search_pages ==1) {
+    
+  search_ids <-
+    search_ids_page1 |>
+    mutate(url = glue("{single_url}?idkey={idkey}"))
+  
+  # if >1 page of results, fetch the extra pages, pull out IDs, make URLs and combine with the first lot
+  
+  } else {
+    
+  search_pages_from <-
+  # expand to sequence from 2:search_pages (don't need 1 as you already have the first page)
+  seq(2, search_pages) |>
+  # put each page on a row in a df 
+  enframe(name=NULL, value = "pagenum") |>
+  # calculate from= value
+  mutate(from = (pagenum-1)*10) |>
+  # append from= to the search_url 
+  mutate(url = glue("{search_url}&from={from}"))
+
+
+  # run the new query. this could take a little while if there are a lot of pages.
+  search_json_pages <-
+   map(search_pages_from$url, slow_json)
+
+
+  # extract the IDs from the json, which is more deeply nested than the first. 
+  # this code could probably be improved because my grasp of this stuff is a bit ropey
+  # I make extensive use of the purrr lessons at https://jennybc.github.io/purrr-tutorial/index.html
+  search_ids_pages <-
+  map(search_json_pages, `[`, "hits" ) |>
+  map("hits") |> # or could use flatten()
+  # bind_rows flattens into a single df with hits as a list-column. i don't know why, it just does.
+  bind_rows() |>
+  unnest(hits) |>
+  unnest(`_source`) |>
+  select(idkey, title, text)
+
+  # bind first page to extras
+  search_ids <-
+  bind_rows(
+    search_ids_page1,
+    search_ids_pages
+  ) |>
+  mutate(url = glue("{single_url}?idkey={idkey}"))
+
+  }
+  # end of nested if/else
+  
+
+# fetch the trials data. **this bit will take a while**
+fetch_ids <-
+  map(search_ids$url, slow_json)
+
+
+# extract the good stuff
+results_ids <-
+map(fetch_ids, `[`, "hits" ) |>
+  map("hits") |>
+  bind_rows() |>
+  unnest(hits) |>
+  unnest(`_source`) |>
+  select(idkey, metadata, title, xml, text)
+
+
+## save the data to files so you don't have to run queries again
+## need to parse the metadata/xml fields as xml/html (xml2::read_xml / rvest::read_html)
+
+
+# list of ids to use as filenames
+# (I prefer to redo this using the downloaded data rather than reusing earlier list of IDs)
+results_ids_names <-
+  results_ids$idkey
+
+# parse the xml
+results_xml <-
+  map(results_ids$xml, read_xml)
+
+# select the plain text
+results_txt <-
+  results_ids$text
+
+
+## write files using the output functions above
+# note use of purrr::pmap() https://purrr.tidyverse.org/reference/pmap.html
+# invisible() stops printing out of console messages which can get a bit much after the n-hundredth time
+
+# why is this not working?? check function agt original i suppose
+
+# write xml
+invisible(
+  list(
+    data=results_xml,
+    names=results_ids_names
+  ) |>
+  pmap(output_obo_xml)
+ )
+
+# write plain text
+invisible(
+  list(
+    data=results_txt,
+    names=results_ids_names
+  ) |>
+  pmap(output_obo_txt)
+ )
+
+
+# save the "metadata" for each trial in a CSV file. 
+
+results_metadata <-
+map(results_ids$metadata, read_html) |> 
+  map(obo_metadata_table) |>
+  bind_rows()
+
+write_csv(results_metadata, paste0(here::here("outputs"), "/", query_offence, ".csv"), na="")
+
+} 
+
+```
+
+
+
+

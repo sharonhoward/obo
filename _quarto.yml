@@ -1,0 +1,34 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "OBO ~ Data"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+    right:
+      - icon: github
+        href: https://github.com/sharonhoward
+        aria-label: Github
+
+  page-footer: "Site created by [Sharon Howard](https://sharonhoward.org) with [Quarto](https://quarto.org/)"
+
+format:
+  html:
+    theme: simplex
+    css: styles.css
+    toc: true
+    #code-fold: true
+
+
+date-format: "D MMMM YYYY"
+
+
+# freeze computational output
+# (see https://quarto.org/docs/projects/code-execution.html#freeze)
+
+freeze: auto
+
+

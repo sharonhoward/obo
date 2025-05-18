@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.53">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Sharon Howard">
+<meta name="dcterms.date" content="2025-05-18">
+<meta name="description" content="Introductory notes on using the new (2023) version of the Old Bailey Online API">
+
+<title>The new OBO API: an overview – OBO ~ Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="../site_libs/jsoneditor-0.18.7/jsoneditor.min.js"></script>
+<script src="../site_libs/jsonedit-binding-4.0.0/jsonedit.js"></script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">OBO ~ Data</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/sharonhoward"> <i class="bi bi-github" role="img" aria-label="Github">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#notes-on-search-parameters" id="toc-notes-on-search-parameters" class="nav-link" data-scroll-target="#notes-on-search-parameters">Notes on search parameters</a>
+  <ul class="collapse">
+  <li><a href="#pagination" id="toc-pagination" class="nav-link" data-scroll-target="#pagination">pagination</a></li>
+  <li><a href="#dates-and-date-ranges" id="toc-dates-and-date-ranges" class="nav-link" data-scroll-target="#dates-and-date-ranges">dates and date ranges</a></li>
+  <li><a href="#offences" id="toc-offences" class="nav-link" data-scroll-target="#offences">offences</a></li>
+  <li><a href="#verdicts-and-sentences" id="toc-verdicts-and-sentences" class="nav-link" data-scroll-target="#verdicts-and-sentences">verdicts and sentences</a></li>
+  <li><a href="#pleas-new" id="toc-pleas-new" class="nav-link" data-scroll-target="#pleas-new">pleas (new)</a></li>
+  <li><a href="#item-types" id="toc-item-types" class="nav-link" data-scroll-target="#item-types">item types</a></li>
+  <li><a href="#defendants-and-victims" id="toc-defendants-and-victims" class="nav-link" data-scroll-target="#defendants-and-victims">defendants and victims</a></li>
+  </ul></li>
+  <li><a href="#the-json" id="toc-the-json" class="nav-link" data-scroll-target="#the-json">The JSON</a>
+  <ul class="collapse">
+  <li><a href="#search-results" id="toc-search-results" class="nav-link" data-scroll-target="#search-results">search results</a></li>
+  <li><a href="#single-records" id="toc-single-records" class="nav-link" data-scroll-target="#single-records">single records</a></li>
+  </ul></li>
+  <li><a href="#for-users-of-the-old-obapi" id="toc-for-users-of-the-old-obapi" class="nav-link" data-scroll-target="#for-users-of-the-old-obapi">For users of the old OBAPI</a>
+  <ul class="collapse">
+  <li><a href="#changes-to-query-urls" id="toc-changes-to-query-urls" class="nav-link" data-scroll-target="#changes-to-query-urls">changes to query URLs</a></li>
+  <li><a href="#whats-gone-away" id="toc-whats-gone-away" class="nav-link" data-scroll-target="#whats-gone-away">what’s gone away</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The new OBO API: an overview</h1>
+</div>
+
+<div>
+  <div class="description">
+    Introductory notes on using the new (2023) version of the Old Bailey Online API
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Sharon Howard </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">18 May 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>As part of a major overhaul and refresh of the <a href="https://www.oldbaileyonline.org/">Old Bailey Online</a> in 2023, there were major breaking changes to the OBO API. The available <a href="https://www.oldbaileyonline.org/about/api">documentation</a> for the new API is sparse, and these notes are intended to help users find their way around.</p>
+<p>I cover two of the available API endpoints:</p>
+<ul>
+<li>https://www.dhi.ac.uk/api/data/oldbailey_record - for searching trials and other sections in the Old Bailey Proceedings</li>
+<li>https://www.dhi.ac.uk/api/data/oldbailey_record_single - for full data about individual trials and other sections in the Proceedings</li>
+</ul>
+<p>There are two other endpoints, one for Ordinary’s Accounts and one for the Associated Records database. I haven’t yet looked at these in any detail and may add further notes about them later, but would expect them to be similar.</p>
+<p>See also <a href="../notes/example-api.html">this worked example to search and download data from the API using R</a>.</p>
+</section>
+<section id="notes-on-search-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="notes-on-search-parameters">Notes on search parameters</h2>
+<p>The <a href="https://www.oldbaileyonline.org/about/api">official documentation</a> only mentions keyword searching with the <code>text</code> parameter. These notes are intended to fill in some of the gaps for more structured searches of offences, etc.</p>
+<p>The crucial thing to know is that API query URLs mirror search results URLs on the website.</p>
+<p>So, for example, the URL for the first page of results for a site search for the offence “killing”:</p>
+<ul>
+<li>https://www.oldbaileyonline.org/search/crime?offence=kill</li>
+</ul>
+<p>The corresponding api query url:</p>
+<ul>
+<li>https://www.dhi.ac.uk/api/data/oldbailey_record?offence=kill</li>
+</ul>
+<p>(Note: the /crime/ part of the website URL is not needed.)</p>
+<p>So generally you should be able to test out queries on the website first to work out what parameters you need for API queries, and I’m not going to list a lot of examples here.</p>
+<p>(There could potentially be specific omissions in the API that I’m not aware of, so I recommend initially testing out results for whatever you want to do.)</p>
+<section id="pagination" class="level3">
+<h3 class="anchored" data-anchor-id="pagination">pagination</h3>
+<p>The example URL above will only get the first 10 results, but most searches will return more than that. The parameter for this is <code>from</code>.</p>
+<p>To get the second page of results: <strong>from=10</strong></p>
+<p>So, for the example above: https://www.dhi.ac.uk/api/data/oldbailey_record?offence=kill&amp;from=10</p>
+<p>(Note that numbering starts from 0, not 1.)</p>
+</section>
+<section id="dates-and-date-ranges" class="level3">
+<h3 class="anchored" data-anchor-id="dates-and-date-ranges">dates and date ranges</h3>
+<p>A range specifying month and year (March 1739-August 1755): <strong>month_gte=3&amp;month_lte=8&amp;year_gte=1739&amp;year_lte=1755</strong></p>
+<p>For the year range only: <strong>year_gte=1739&amp;year_lte=1755</strong></p>
+<p>A single year: <strong>year_gte=1739&amp;year_lte=1739</strong></p>
+</section>
+<section id="offences" class="level3">
+<h3 class="anchored" data-anchor-id="offences">offences</h3>
+<p>The top level category breaking peace (including all subcategories): <strong>offence=breakingPeace</strong></p>
+<p>For wounding, subcategory of breakingPeace: <strong>offence=wounding</strong></p>
+<p>For subcategories you don’t need to specify the parent category <em>except</em> for “other” subcategories</p>
+<ul>
+<li><strong>offence=breakingPeaceOther</strong> / <strong>offence=deceptionNoDetail</strong></li>
+</ul>
+<p>“NoDetail” is a new subcategory which essentially means the same thing as “Other” but reflects some inconsistencies in the XML where the offence was tagged without any subcategory at all (but should properly have been Other). In the old API I think there was no way to pull these out separately.</p>
+</section>
+<section id="verdicts-and-sentences" class="level3">
+<h3 class="anchored" data-anchor-id="verdicts-and-sentences">verdicts and sentences</h3>
+<p>A verdict of guilty: <strong>verdict=guilty</strong></p>
+<p>A sentence of death: <strong>punishment=death</strong></p>
+</section>
+<section id="pleas-new" class="level3">
+<h3 class="anchored" data-anchor-id="pleas-new">pleas (new)</h3>
+<p>Pleaded guilty: <strong>plea=guilty</strong></p>
+<p>I think all the old “pleaded” verdicts are still available under verdict and on a superficial inspection seem to get much the same results. Eg <strong>plea=guilty</strong> and <strong>verdict=pleadedGuilty</strong> seem to get the same results. However, this new option is the result of a fairly recent project and there may well be details I don’t know about in the background information on the website.</p>
+</section>
+<section id="item-types" class="level3">
+<h3 class="anchored" data-anchor-id="item-types">item types</h3>
+<p>To restrict to trial texts only (ie excluding advertisements, supplementary, etc): <strong>div_type=trialAccount</strong></p>
+<p>This probably won’t matter when doing offence/verdict/sentence queries but will be more relevant for text queries.</p>
+</section>
+<section id="defendants-and-victims" class="level3">
+<h3 class="anchored" data-anchor-id="defendants-and-victims">defendants and victims</h3>
+<p>Eg for gender:</p>
+<ul>
+<li><strong>defendant_gender=female</strong></li>
+<li><strong>victim_gender=male</strong></li>
+</ul>
+</section>
+</section>
+<section id="the-json" class="level2">
+<h2 class="anchored" data-anchor-id="the-json">The JSON</h2>
+<p>There is a lot of… stuff… in the JSON returned by the API, much of it not useful for data analysis. This focuses on some bits you might care about.</p>
+<section id="search-results" class="level3">
+<h3 class="anchored" data-anchor-id="search-results">search results</h3>
+<p>Browse a sample of the search results JSON:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jsonedit</span>(sample_search_json)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="jsonedit html-widget html-fill-item" id="htmlwidget-7f831a87bf5b7cae2a39" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-7f831a87bf5b7cae2a39">{"x":{"data":{"took":6,"timed_out":false,"_shards":{"total":5,"successful":5,"skipped":0,"failed":0},"hits":{"total":14,"max_score":{},"hits":{"_index":["dhids_oldbailey_record","dhids_oldbailey_record","dhids_oldbailey_record","dhids_oldbailey_record","dhids_oldbailey_record","dhids_oldbailey_record","dhids_oldbailey_record","dhids_oldbailey_record","dhids_oldbailey_record","dhids_oldbailey_record"],"_type":["doc","doc","doc","doc","doc","doc","doc","doc","doc","doc"],"_id":["AYxEMKr-Pld_y58Rz-WX","AYxEMKr-Pld_y58Rz-Wb","AYxEMsJtPld_y58R0LY1","AYxEMsJtPld_y58R0LY-","AYxEMsJtPld_y58R0LY_","AYxEMsJtPld_y58R0LZN","AYxELPgyPld_y58RzoJC","AYxEMcRTPld_y58R0FKa","AYxEMcRTPld_y58R0FKe","AYxEMcRTPld_y58R0FKo"],"_source":{"idkey":["t17000115-17","t17000115-21","t17000828-4","t17000828-13","t17000828-14","t17000828-28","t17000828-29","t17021014-5","t17021014-9","t17021014-19"],"images":["https://www.dhi.ac.uk/san/ob/1700s/17000115002.gif","https://www.dhi.ac.uk/san/ob/1700s/17000115003.gif","https://www.dhi.ac.uk/san/ob/1700s/17000828001.gif","https://www.dhi.ac.uk/san/ob/1700s/17000828002.gif","https://www.dhi.ac.uk/san/ob/1700s/17000828002.gif","https://www.dhi.ac.uk/san/ob/1700s/17000828003.gif",["https://www.dhi.ac.uk/san/ob/1700s/17000828003.gif","https://www.dhi.ac.uk/san/ob/1700s/17000828004.gif"],"https://www.dhi.ac.uk/san/ob/1700s/17021014002.gif","https://www.dhi.ac.uk/san/ob/1700s/17021014002.gif","https://www.dhi.ac.uk/san/ob/1700s/17021014003.gif"],"text":["Anne Buckler and Elizabeth Jefferys , both of the Parish of St. Andrews Holborne , the first was Indicted as Principal, and the other as Accessary before the Fact committed, for breaking the House of Thomas Beckenson , on the 9th of December last, with an Intention to steal his Goods . The Evidence not being sufficient to Convict the Principal they were both acquitted .","Sarah Impey , of the Parish of St. Mary Islington , was Indicted for breaking the dwelling House of Mary Urlin Widow in the Day time, on the 24th of December last, no Person being therein, and taking thence two Holland Smocks, a Flaxen Table cloath and 20 s. in Moneys numbred . The Evidence against her being not sufficient to Convict her, she was acquitted .","Jane Wilson of the Parish of St. Andrews Holbourn , was Indicted for Felony and Robbery, for Robbing the House of Jeremy Deere , in the Day time, and putting Elizabeth his Wife in fear on the 18th of August last, and taking thence 2 Holland Shirts, 8 Smocks a Silver Fringe, and Divers other Goods . The Prosecutors Wife deposed that she sitting below Stairs in the Kitchen heard a great noise above, upon which she went into the Street and called some People to her assistance, who coming, found the","Mary Jones , of the Parish of Stepny , was Indicted for Felony and Robbery for breaking the House of Edward Owen , on the 20th of July last, about 2 in the Afternoon, and taking thence a Danmask Gown and Petticoat, a Monair Petticoat, a Shirt, 3 Smocks, A laced Handkerchief, a Serge Manlte, and 11 s. in Money . Mr. Owen said that he lost some Goods, but who took them he knew not; but his Wife deposed that she went out with her Child into the Feilds to quiet it, she lockt her Door; but when she c","Elizabeth Barnet and Ellinor Dic , both of the Parish of St. Leonard Shoreditch , were Indicted for breaking the House of Thomas Drew , on the 22d of July last, in the Day time no Person being therein, and taking thence a Hood, a Flaxen Sheet, a lac'd Cap, and 6 Pewter Spoons . The Prosecutors Wife deposed that she went down to the Alley Gate, and was not gone above half a quarter of an Hour, and coming back found the two Prisoners in her House, and the Goods bundled up, and that they were for m","William King , of the Parish of Wilsdon was Indicted for breaking the House of Henry Forster on the 23d of August last, in the Day time, no Person being therein, and taking thence a Cloath Coat, a Wastcoat, the Goods of Henry Forster, and 2 Coats, a Frock and other Goods of John Payne , and a Damask stuff Gown, the Goods of Elizabeth Gage , Spinster . It appeared that he broke the Wall and got into the House, and took the Goods and carried them into a Wood, where they were found bundled up, and ","Thomas Thompson , of the Parish of St. James Westminster , was Indicted for breaking the House of William Argent , on the 23d of July last, in the day time, no Person being therein, and taking thence a Brass Kettle a Copper Pot, 9 Pewter Plates, a pair of Shag Breeches, and 4 Pewter Dishes . The Prosecutor deposed that his Maid coming home found the Prisoner coming out with the Goods, and saw the Kettle upon his Head; upon whichshe followed him and cried out stop him, and he dropt the things, an","Elizabeth Price , of the Parish of St. Dunstans in the West , was indicted for breaking the Dwelling-house of John Lang , in the Day time, no Person being therein, on the 7th of October last, about two in the Afternoon, and taking thence a Serge Counterpain, and other Goods of the said Lang . The first Evidence deposed that he had an occasion to go to a Gentlemans Chamber in the Temple, and did mistake the Stair-Case, and going up four pair of Stairs he saw a hole broke at three pair of Stairs, ","Elizabeth Stephens , of the Parish of St. Martins in the Fields , was indicted for breaking the House of Daniel Saxton in the Day time, about 7 in the Afternoon, on the 14th of July last, no Person being therein, and taking thence a Stuff Wastcoat and a pair of Breeches of Rich. Davis , and a pair of Sheets and Blankets, the Goods of the said Saxton . The Evidence deposed that his Room was robbed and in pursuit he took the Prisoner in the Passage. She denied the Fact, and nothing being found upo","Thomas Twist , Jane Williams and Mary Buck , of the Parish of Chelsea , were indicted for breaking the House of William Stubbington , in the day time, on the 18th of July last, and taking a Copper, a pair of stuff Curtains, and divers other Goods . It appeared that the Door was broke open whilst the Prosecutor was gone out early to Market, and the Goods gone. There was other Evidence who saw the Women near the House, and saw one of them carry the Copper upon her Head, and the other the Bundles, "],"title":["Anne Buckler. Elizabeth Jefferys. Theft; housebreaking. 15th January 1700.","Sarah Impey. Theft; housebreaking. 15th January 1700.","Jane Wilson. Theft; housebreaking. 28th August 1700.","Mary Jones. Theft; housebreaking. 28th August 1700.","Elizabeth Barnet. Ellinor Dic. Theft; housebreaking. 28th August 1700.","William King. Theft; housebreaking, Theft; housebreaking. 28th August 1700.","Thomas Thompson. Theft; housebreaking. 28th August 1700.","Elizabeth Price. Theft; housebreaking. 14th October 1702.","Elizabeth Stephens. Theft; housebreaking. 14th October 1702.","Thomas Twist. Jane Williams. Mary Buck. Theft; housebreaking. 14th October 1702."]},"sort":[[-8519126400000,17],[-8519126400000,21],[-8499686400000,4],[-8499686400000,13],[-8499686400000,14],[-8499686400000,28],[-8499686400000,29],[-8432553600000,5],[-8432553600000,9],[-8432553600000,19]]}}},"options":{"mode":"tree","modes":["text","tree","table"]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>(<a href="https://www.oldbaileyonline.org/search/crime?offence=housebreaking&amp;year_gte=1700&amp;year_lte=1704#results">search for housebreaking between 1700 and 1704</a>)</p>
+<p>The number of results (hits &gt; total)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sample_search_json<span class="sc">$</span>hits<span class="sc">$</span>total</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 14</code></pre>
+</div>
+</div>
+<p>Trial IDs (hits &gt; hits &gt; _source &gt; idkey) - needed to get full data of individual trials via the single record endpoint.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sample_search_json<span class="sc">$</span>hits<span class="sc">$</span>hits<span class="sc">$</span><span class="st">`</span><span class="at">_source</span><span class="st">`</span><span class="sc">$</span>idkey</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "t17000115-17" "t17000115-21" "t17000828-4"  "t17000828-13" "t17000828-14"
+ [6] "t17000828-28" "t17000828-29" "t17021014-5"  "t17021014-9"  "t17021014-19"</code></pre>
+</div>
+</div>
+<p>The search returns very limited information about each trial (or other item); it does include a text snippet and the page title for each item, which could be useful for some purposes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sample_search_json<span class="sc">$</span>hits<span class="sc">$</span>hits<span class="sc">$</span><span class="st">`</span><span class="at">_source</span><span class="st">`</span><span class="sc">$</span>text[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Anne Buckler and Elizabeth Jefferys , both of the Parish of St. Andrews Holborne , the first was Indicted as Principal, and the other as Accessary before the Fact committed, for breaking the House of Thomas Beckenson , on the 9th of December last, with an Intention to steal his Goods . The Evidence not being sufficient to Convict the Principal they were both acquitted ."</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sample_search_json<span class="sc">$</span>hits<span class="sc">$</span>hits<span class="sc">$</span><span class="st">`</span><span class="at">_source</span><span class="st">`</span><span class="sc">$</span>title[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Anne Buckler. Elizabeth Jefferys. Theft; housebreaking. 15th January 1700."</code></pre>
+</div>
+</div>
+</section>
+<section id="single-records" class="level3">
+<h3 class="anchored" data-anchor-id="single-records">single records</h3>
+<p>The single record endpoint is needed to get the full data about items.</p>
+<p>It includes <em>three</em> versions of the trial/item text; two are most likely to be of interest for data analysis.</p>
+<ul>
+<li><code>xml</code> - the full tagged XML (hits &gt; hits &gt; _source &gt; xml)</li>
+<li><code>text</code> - a plain text version (hits &gt; hits &gt; _source &gt; text)</li>
+</ul>
+<p><em>plus</em></p>
+<ul>
+<li><code>metadata</code> - this contains the same information as the simplified summary table at the top of each trial page, which might be sufficient for some purposes (hits &gt; hits &gt; _source &gt; metadata)</li>
+</ul>
+<p>Browse a sample trial JSON:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">jsonedit</span>(sample_trial_json)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="jsonedit html-widget html-fill-item" id="htmlwidget-bb283acc1809607cd94b" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-bb283acc1809607cd94b">{"x":{"data":{"took":3,"timed_out":false,"_shards":{"total":20,"successful":20,"skipped":0,"failed":0},"hits":{"total":1,"max_score":10.2085,"hits":{"_index":"dhids_oldbailey_record","_type":"doc","_id":"AYxEMKr-Pld_y58Rz-WX","_score":10.2085,"_source":{"metadata":"<table xmlns:dhids=\"https://www.dhi.ac.uk/data/\" class=\"table small\"><tbody><tr><th scope=\"row\">Text type<\/th><td>Trial account<\/td><\/tr><tr><th scope=\"row\">Defendants<\/th><td>Anne Buckler, Elizabeth Jefferys<\/td><\/tr><tr><th scope=\"row\">Offences<\/th><td><a href=\"../about/crimes#theft\">Theft<\/a> &gt; <a href=\"../about/crimes#housebreaking\">Housebreaking<\/a><\/td><\/tr><tr><th scope=\"row\">Session Date<\/th><td><a href=\"17000115#t17000115-17\">15th January 1700<\/a><\/td><\/tr><tr><th scope=\"row\">Reference Number<\/th><td>t17000115-17<\/td><\/tr><tr><th scope=\"row\">Verdicts<\/th><td><a href=\"../about/verdicts#notguilty\">Not guilty<\/a><\/td><\/tr><tr><th scope=\"row\">Navigation<\/th><td><a href=\"t17000115-16\">&lt; Previous section (Trial account)<\/a> | <a href=\"t17000115-18\">Next section (Trial account) &gt;<\/a><\/td><\/tr><\/tbody><\/table>","images":["https://www.dhi.ac.uk/san/ob/1700s/17000115002.gif"],"exturl":"https://www.oldbaileyonline.org/browse.jsp?div=t17000115-17","citation":"<span><i>Old Bailey Proceedings Online<\/i> (www.oldbaileyonline.org, version 9.0) January 1700. Trial of Anne Buckler , Elizabeth Jefferys (t17000115-17).<\/span>","project":"oldbailey","collection":"record","title":"Anne Buckler. Elizabeth Jefferys. Theft; housebreaking. 15th January 1700.","image_titles":["Proceedings of the Old Bailey, 15th January ."],"idkey":"t17000115-17","navigation":"<span><a href=\"t17000115-16\">&lt; Previous section (Trial account)<\/a> | <a href=\"t17000115-18\">Next section (Trial account) &gt;<\/a><\/span>","xml":"<div1 type=\"trialAccount\" id=\"t17000115-17\"> <interp inst=\"t17000115-17\" type=\"prevdiv\" value=\"t17000115-16\" divtype=\"trialAccount\"/> <interp inst=\"t17000115-17\" type=\"nextdiv\" value=\"t17000115-18\" divtype=\"trialAccount\"/> <interp inst=\"t17000115-17\" type=\"div0\" value=\"17000115\" divtype=\"sessionsPaper\"/> <interp inst=\"t17000115-17\" type=\"collection\" value=\"BAILEY\"/> <interp inst=\"t17000115-17\" type=\"year\" value=\"1700\"/> <interp inst=\"t17000115-17\" type=\"uri\" value=\"sessionsPapers/17000115\"/> <interp inst=\"t17000115-17\" type=\"date\" value=\"17000115\"/> <xptr imgpath=\"ob/1700s/17000115002.gif\" imgtitle=\"Proceedings of the Old Bailey, 15th January .\" imgrights=\"This image is reproduced courtesy of the Bodleian Library, University of Oxford. Commercial use is prohibited without permission of the owner of the original.\" type=\"pageFacsimile\" value=\"preceding\" doc=\"17000115002\"/> <join result=\"criminalCharge\" id=\"t17000115-17-off87-c67\" targOrder=\"Y\" targets=\"t17000115-17-defend67 t17000115-17-off87 t17000115-17-verdict89\"/> <join result=\"criminalCharge\" id=\"t17000115-17-off87-c68\" targOrder=\"Y\" targets=\"t17000115-17-defend68 t17000115-17-off87 t17000115-17-verdict89\"/> <p> <persName id=\"t17000115-17-defend67\" type=\"defendantName\"> Anne Buckler <interp inst=\"t17000115-17-defend67\" type=\"surname\" value=\"Buckler\"/> <interp inst=\"t17000115-17-defend67\" type=\"given\" value=\"Anne\"/> <interp inst=\"t17000115-17-defend67\" type=\"gender\" value=\"female\"/> <\/persName> and <persName id=\"t17000115-17-defend68\" type=\"defendantName\"> Elizabeth Jefferys <interp inst=\"t17000115-17-defend68\" type=\"surname\" value=\"Jefferys\"/> <interp inst=\"t17000115-17-defend68\" type=\"given\" value=\"Elizabeth\"/> <interp inst=\"t17000115-17-defend68\" type=\"gender\" value=\"female\"/> <\/persName> , both of the Parish of <placeName id=\"t17000115-17-defloc86\">St. Andrews Holborne<\/placeName> <interp inst=\"t17000115-17-defloc86\" type=\"placeName\" value=\"St. Andrews Holborne\"/> <interp inst=\"t17000115-17-defloc86\" type=\"type\" value=\"defendantHome\"/> <join result=\"persNamePlace\" targOrder=\"Y\" targets=\"t17000115-17-defend67 t17000115-17-defloc86\"/> <interp inst=\"t17000115-17-defloc86\" type=\"defendantNameHome\" value=\"St. Andrews Holborne\"/> <join result=\"persNamePlace\" targOrder=\"Y\" targets=\"t17000115-17-defend68 t17000115-17-defloc86\"/> <interp inst=\"t17000115-17-defloc86\" type=\"defendantNameHome\" value=\"St. Andrews Holborne\"/>, the <rs id=\"t17000115-17-off87\" type=\"offenceDescription\"> <interp inst=\"t17000115-17-off87\" type=\"offenceCategory\" value=\"theft\"/> <interp inst=\"t17000115-17-off87\" type=\"offenceSubcategory\" value=\"housebreaking\"/> first was Indicted as Principal, and the other as Accessary before the Fact committed, for breaking the House of <interp inst=\"t17000115-17-victim69\" type=\"victims-institution\" value=\"no\"/> <interp inst=\"t17000115-17-victim69\" type=\"victims-hisco-code\" value=\"0\"/> <persName id=\"t17000115-17-victim69\" type=\"victimName\"> Thomas Beckenson <interp inst=\"t17000115-17-victim69\" type=\"surname\" value=\"Beckenson\"/> <interp inst=\"t17000115-17-victim69\" type=\"given\" value=\"Thomas\"/> <interp inst=\"t17000115-17-victim69\" type=\"gender\" value=\"male\"/> <join result=\"offenceVictim\" targOrder=\"Y\" targets=\"t17000115-17-off87 t17000115-17-victim69\"/> <\/persName> , on the <rs id=\"t17000115-17-cd88\" type=\"crimeDate\">9th of December<\/rs> <join result=\"offenceCrimeDate\" targOrder=\"Y\" targets=\"t17000115-17-off87 t17000115-17-cd88\"/> last, with an Intention to steal his Goods <\/rs>. The Evidence not being sufficient to Convict the Principal they were both <rs id=\"t17000115-17-verdict89\" type=\"verdictDescription\"> <interp inst=\"t17000115-17-verdict89\" type=\"verdictCategory\" value=\"notGuilty\"/> <interp inst=\"t17000115-17-verdict89\" type=\"verdictSubcategory\" value=\"notGuiltyNoDetail\"/> <interp inst=\"t17000115-17-verdict89\" type=\"plea\" value=\"notGuilty\"/> acquitted <\/rs>.<\/p> <\/div1>","html":"<div> <p> Anne Buckler and Elizabeth Jefferys , both of the Parish of St. Andrews Holborne , the first was Indicted as Principal, and the other as Accessary before the Fact committed, for breaking the House of Thomas Beckenson , on the 9th of December last, with an Intention to steal his Goods . The Evidence not being sufficient to Convict the Principal they were both acquitted .<\/p> <\/div>","text":"Anne Buckler and Elizabeth Jefferys , both of the Parish of St. Andrews Holborne , the first was Indicted as Principal, and the other as Accessary before the Fact committed, for breaking the House of Thomas Beckenson , on the 9th of December last, with an Intention to steal his Goods . The Evidence not being sufficient to Convict the Principal they were both acquitted .","image_rights":["This image is reproduced courtesy of the Bodleian Library, University of Oxford. Commercial use is prohibited without permission of the owner of the original."]}}}},"options":{"mode":"tree","modes":["text","tree","table"]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## sample_trial_json$hits$hits$`_source`$xml</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="for-users-of-the-old-obapi" class="level2">
+<h2 class="anchored" data-anchor-id="for-users-of-the-old-obapi">For users of the old OBAPI</h2>
+<p>A few notes about the major differences between new and old API.</p>
+<section id="changes-to-query-urls" class="level3">
+<h3 class="anchored" data-anchor-id="changes-to-query-urls">changes to query URLs</h3>
+<p>Previously for offences/verdicts/sentences in the URL it was always necessary to explicitly spell out category_subcategory. That’s no longer necessary except in a few specific contexts (and it’s done slightly differently).</p>
+<p>An example: offence “fraud”, subcategory of deception. The relevant bit of a search URL previously looked like this:</p>
+<p>_<strong>offences_offenceCategory_offenceSubcategory=deception_fraud</strong></p>
+<p>That’s been replaced by the much shorter and simpler</p>
+<p><strong>offence=fraud</strong></p>
+<p>Now the top level category is only needed if</p>
+<ul>
+<li>searching for the whole category, eg: offence=deception</li>
+<li>searching for subcategories Other or NoDetail, which need to be like this
+<ul>
+<li><strong>offence=deceptionOther</strong> (previously deception_other)</li>
+<li><strong>offence=deceptionNoDetail</strong> (not in the previous version)</li>
+</ul></li>
+</ul>
+</section>
+<section id="whats-gone-away" class="level3">
+<h3 class="anchored" data-anchor-id="whats-gone-away">what’s gone away</h3>
+<p>The new API is in many ways more powerful than the old and with fewer limits, but it’s also more generic and some functionality is no longer available.</p>
+<ul>
+<li>the <code>terms</code> endpoint which gave a list of all the fields and values available in the API</li>
+<li>the option (breakdown=[field]) for a breakdown of subcategories and so on for a search</li>
+<li>the option (return=zip) to download zip archives of multiple trials XML</li>
+</ul>
+<p>The functionality can be reproduced but usually with some loss of convenience; if you have scripts using them you’ll probably find that their replacements need to be longer and more complicated.</p>
+<p>The OBAPI demonstrator has also been withdrawn; this has no replacement.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Site created by <a href="https://sharonhoward.org">Sharon Howard</a> with <a href="https://quarto.org/">Quarto</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

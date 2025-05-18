@@ -1,0 +1,22 @@
+---
+title: "Old Bailey Online for Data Analysis"
+listing:
+  contents:
+    - "notes/*.qmd"
+  sort: "date desc"
+  type: default
+  fields: [date, title, description]
+  categories: false
+  sort-ui: false
+  filter-ui: false
+  date-format: "D MMM YYYY"
+  page-size: 99
+toc: false
+---
+
+This website is a resource for users of the [Old Bailey Online](https://www.oldbaileyonline.org/) who are interested in Digital Humanities, Data Science and computational approaches to the OBO's complex data.
+
+I plan to write guides to using the [OBO API](https://www.oldbaileyonline.org/about/api), as well as useful tools and methods for processing data obtained via the API.
+
+
+## Notes
