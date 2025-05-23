@@ -219,7 +219,7 @@ Now the top level category is only needed if
 
 ### what's gone away
 
-The new API is in many ways more powerful than the old and with fewer limits, but it's also more generic and some functionality is no longer available.
+The new API is in many ways more powerful than the old and with fewer limits, but it's also more generic and some functionality is no longer available (*as far as I can tell*, though the lack of documentation can make things hard to find).
 
 - the `terms` endpoint which gave a list of all the fields and values available in the API
 - the option (breakdown=[field]) for a breakdown of subcategories and so on for a search
