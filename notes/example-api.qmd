@@ -8,7 +8,7 @@ author: "Sharon Howard"
 
 ## Introduction
 
-As part of a major overhaul and refresh of the [Old Bailey Online](https://www.oldbaileyonline.org/) in 2023, there were major breaking changes to the OBO API. The code here is for an example of downloading data from a simple search for one offence with a start and end year.
+As part of a major overhaul and refresh of the [Old Bailey Online](https://www.oldbaileyonline.org/) in 2023, there were substantial breaking changes to the OBO API. The code here is an example of downloading data from a simple search for one offence with a start and end year.
 
 See also the [overview of API features and changes](./intro-api.qmd).
 
@@ -32,12 +32,11 @@ The steps involved are:
 
 The XML files downloaded by the code contain the complete (complex) tagging for each trial: offences, verdicts, sentences, names, locations, etc. The TXT files contain the plain text of trials. The metadata is a simplified summary of trial tagging.
 
-Note: I'm currently thinking about the best methods for running multiple searches when all you want is counts of results and may write another example for this.
 
 
 ## Caveats
 
-### downloading is not going to be speedy
+### downloading trials is not going to be speedy
 
 Fetching trials data is likely to take a while if you have more than a handful of results. It's advisable to test how many results your search will return [on the website](https://www.oldbaileyonline.org/search/crime) before running any of this code. (More generally, the website is the best place to test out and refine queries for the API.)
 
@@ -139,7 +138,7 @@ This example uses [housebreaking between 1700 and 1704](https://www.oldbaileyonl
 
 See the [API documentation](https://www.oldbaileyonline.org/about/api) for the basics. But that is *very* basic; the aim of this example is to help fill in some of the gaps.
 
-As a general rule, it helps to know that API queries mirror website searches.
+As a general rule, it helps to know that API queries should mirror website searches.
 
 The website search URL for the example (first ten results):
 
@@ -148,6 +147,7 @@ https://www.oldbaileyonline.org/search/crime?offence=housebreaking&year_gte=1700
 The matching API query URL:
 
 https://www.dhi.ac.uk/api/data/oldbailey_record?offence=housebreaking&year_gte=1700&year_lte=1704
+
 
 
 ```{r}

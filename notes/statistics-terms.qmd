@@ -1,0 +1,272 @@
+---
+title: "API terms and statistics"
+description: "How to get lists of query terms and counts of things in the OBO API"
+date: "2025-05-30"
+author: "Sharon Howard"
+execute: 
+  warning: false
+  message: false
+---
+
+## Introduction
+
+There were a couple of convenient features in the old OBAPI whose absence I've been asked about a number of times since the API changed. The first was the **terms** endpoint, which returned a JSON list of all the fields that could be queried, their types and possible values. The second was the `breakdown` parameter which could be added to API queries to include a frequency table of terms in the results, and was very handy for statistical analysis.
+
+Until very recently I thought there was no way to reproduce either functionality in the new API without constructing lists manually and/or running a lot of queries using the main search endpoint. And, as far as I know, there aren't any *exact* equivalents. But it turns out you can get (most of) the same information, plus more that wasn't queryable before. 
+
+However, it's undocumented and not easy to use without some background knowledge about the underlying data and how search functions work. 
+So I'm writing this to fill in the gaps (and provide a resource that I can point enquirers to in the future).
+
+Note that I'm still learning about the functions and this post may be subject to minor revisions. 
+
+## Discovery
+
+The solution to both problems lies in the [statistics search](https://www.oldbaileyonline.org/search/statistical). 
+When you run a search there, you can see a "Download this data" link at the bottom of the table or visualisation it displays; if you click on the link it'll download a CSV file. That's pretty useful.
+
+But it gets better when you inspect the URL in the download link. (If you're not familiar with doing that, [the Programming Historian has a quick primer](https://programminghistorian.org/en/lessons/downloading-multiple-records-using-query-strings#understanding-url-queries).) 
+
+This is the download URL for a default offence categories search:
+
+- https://www.dhi.ac.uk/api/data/csv/agg/oldbailey_offence?series=offence_category
+
+It looks very much like an API URL ("https://www.dhi.ac.uk/api/data/..."), and I could infer that it *agg*regates data into a *CSV* &nbsp;file related to *oldbailey_offence*s... but it isn't mentioned anywhere in the API documentation. 
+
+We all like a good mystery, don't we? Let's have a quick look at what it fetches. 
+
+```{r}
+#| message: false
+
+library(here) 
+library(janitor)
+library(glue)
+library(httr)
+library(jsonlite)
+library(listviewer)
+library(tidyverse)
+
+obo_offence_category_stats_csv <-
+  read_csv("https://www.dhi.ac.uk/api/data/csv/agg/oldbailey_offence?series=offence_category")
+
+```
+
+This looks nice. There's a `key` column with what I know are our offence categories' names *and* a `doc_count` column, presumably counts of results. Counting what though? The default for statistical offence searches is to count by offence, so that's the most likely (and is confirmed on the site results page).
+
+```{r}
+obo_offence_category_stats_csv
+```
+
+Let's test it out by running `breakingPeace` through an API search query. 
+
+```{r}
+breaking_peace_json <- fromJSON("https://www.dhi.ac.uk/api/data/oldbailey_record?offence=breakingPeace&div_type=trialAccount")
+```
+
+That gets, as anticipated, the first ten results for offences in the top level category of Breaking Peace. The total trial `hits` (7465) are lower than the `doc_count` (7696).
+
+```{r}
+jsonedit(breaking_peace_json$hits)
+```
+
+
+## Digging deeper
+
+I'm calling these `agg` queries to differentiate them from the API search and single record queries I've already written about.
+
+After various tests and snafus, I worked out the key components of the URLs:
+
+- the fixed part of the URL is **https://www.dhi.ac.uk/api/data/csv/agg/**
+- the unit to count by is in the next path segment before the query string, eg **/oldbailey_offence**; it's always prefixed by "oldbailey_"
+- the important bits of the query string are `series` and `rows`
+
+NB: you may also see a `countby` in query strings when exploring searches. I don't advise using it in API queries; I tested it out quite a bit and I think it either doesn't do anything at all or the `oldbailey_*` path parameter always takes precedence.
+
+
+
+### what to count by?
+
+I should emphasise that what you count by in OBO statistical searches can matter *a lot*.
+
+There are in fact six options: offence, verdict, punishment, defendant, victim and trial. Why so many?!
+
+The OBO data is *not* simple tabular data. In any given trial, there can be multiple defendants, offences, verdicts, punishments and victims. So you can get (as seen with the `breakingPeace` query) very different results when you change what you count by, and the most appropriate choice is likely to depend on what kind of search or analysis you're doing. 
+
+We spent quite a while, way back in about 2008, discussing the most appropriate countby defaults for each search; if you run a few queries on the site changing the search category but keeping the default counts, you can see how it changes. The complexity of the statistics tool led us to write [a guide to its use](https://www.oldbaileyonline.org/about/doingstatistics).
+
+It doesn't become any less complex just because you interact it with it via the API rather than the search form on the site. 
+In some respects it needs even more care, because searches on the site return much more information about the search (in the display it tells you exactly what was counted and what it was counted by). The `agg` query downloads lose much of that context.
+Plus, when constructing an `agg` query, you have to specify what you want to count by; you can't just let the site do it for you. 
+
+Let's look again at the offence categories query, and this time change to /oldbailey_trial. Now the total for `breakingPeace` matches the json hits total. 
+
+```{r}
+obo_offence_trial_query <-
+  read_csv("https://www.dhi.ac.uk/api/data/csv/agg/oldbailey_trial?series=offence_category")
+
+obo_offence_trial_query
+```
+
+
+```{r}
+breaking_peace_json$hits$total
+```
+
+In summary:
+
+The one time it shouldn't matter too much what you count by is if you simply want a list of the available terms for a search query. 
+
+If you want counts that will match the hits totals returned by the search API, use `/oldbailey_trial`. (You'll also need to add `div_type=trialAccount` to the search query to ensure they match *exactly*.)
+
+If you want counts for a statistical analysis and you want your results to be reproducible, choose the most appropriate count carefully *and document your choice every time*. 
+
+
+### query strings
+
+If you're looking at the statistics search form it has four main sections (apart from filtering options in the sidebar, which I'm not going into here but would expect to work in much the same way as other API queries):
+
+1. select a search category (required) 
+2. select a second category (optional) - adding this generates more complex tables ([crosstabs](https://en.wikipedia.org/wiki/Contingency_table))
+3. count by (optional) 
+4. display output (optional)
+
+1 and 2 use identical lists of variables, which I've pulled out of the search form for convenience. 
+
+```{r}
+obo_agg_variables_csv <-
+  read_csv(here::here("data/obo_agg_variables.csv"))
+
+obo_agg_variables_csv$name
+```
+
+Translating from the search form to `agg` query strings, the first search box is equivalent to `series` and the second, if you want it, is `rows`. As far as I can tell from testing you'll never need anything else. You can have *any* combination of variables you like in crosstabs (though some are likely to make more sense than others).
+
+### a crosstabs example
+
+Let's say I'd like a breakdown of offence subcategories per year, counting by offence. 
+
+```{r}
+agg_query_url <- "https://www.dhi.ac.uk/api/data/csv/agg/oldbailey_offence?rows=offence_subcategory&series=year"
+
+offence_subcategory_year_csv <- read_csv(agg_query_url)
+```
+
+The result:
+
+```{r}
+offence_subcategory_year_csv
+```
+
+
+## Scaling up 
+
+Chances are you'll want to get more than one thing at a time! Here are a couple of examples.
+
+### download multiple CSVs
+
+Maybe you want to get the CSVs for all the search variables, ready to use in search scripts. Here's one way to do it, for the simple `series` search for each variable.
+
+First build the query URLs and filenames.
+
+```{r}
+# construct a) URLs and b) filenames from the agg variables list
+
+# I like to embed info about the data in the filename: 
+# name of variable + count by + date of download
+
+date_stamp <- today() |> format('%Y%m%d')
+
+obo_agg_variables <-
+obo_agg_variables_csv |>
+  mutate(url = glue("https://www.dhi.ac.uk/api/data/csv/agg/oldbailey_trial?series={name}")) |>
+  mutate(filename = glue("{name}-bytrial-{date_stamp}"))
+
+# pull out the variable names
+obo_agg_variables_names <- obo_agg_variables$name
+
+# pull out the filenames
+obo_agg_variables_filenames <- obo_agg_variables$filename
+```
+
+
+Then the process for fetching and saving is much the same as I used in my previous [API search example](./example-api.qmd)
+
+```{r}
+#| include: false
+
+# Note: if you've downloaded the .qmd file the next code chunk begins with an eval: false line which is there to prevent the chunk from executing when the page is rendered for the website. You'll need to delete or comment out the line to run the code.
+```
+
+```{r}
+#| eval: false  
+
+# function to write the CSVs to files
+# the outputs/csv/single/ folder must already exist
+output_obo_single_csv <- function(data, names) {
+    folder_path <- here::here("outputs/csv/single")
+    write_csv(data, paste0(folder_path, "/", names, ".csv") )
+}
+
+# slightly slow down read_csv with slowly() when it's used in map.
+slow_csv <-
+  slowly(read_csv, rate=rate_delay(1))
+
+# use purrr::map to fetch the data for each variable
+obo_agg_variables_csvs <- map(obo_agg_variables$url, slow_csv)
+
+# add the variable names back to the list elements
+names(obo_agg_variables_csvs) <- obo_agg_variables_names
+
+# write the CSVs with purrr::pmap.
+invisible(
+  list(
+    data=obo_agg_variables_csvs,
+    names=obo_agg_variables_filenames
+  ) |>
+  pmap(output_obo_single_csv)
+ )
+
+```
+
+Checking out one of the files: 
+
+```{r}
+obo_agg_punishment_category_csv <-
+  read_csv(here::here("outputs/csv/single/punishment_category-bytrial-20250529.csv"))
+
+obo_agg_punishment_category_csv
+```
+
+### all the combinations for crosstabs
+
+There is a neat R function, combn(), to make a set of all unique pairs from a list, when you want to avoid reverse-duplicates (ie, you don't need both "a"+"b" *and* "b"+"a"). The only downside is that it returns a matrix, so you need to convert back to a tibble/dataframe.
+
+
+```{r}
+obo_agg_variables_pairs <-
+combn(obo_agg_variables_names, m=2 ) |>
+  # it's a *very* wide matrix; t() transposes rows and columns
+  t() |>
+  # convert matrix to tibble; .name_repair to create column names
+  as_tibble(.name_repair = ~c("series", "rows"))
+```
+
+```{r}
+obo_agg_variables_pairs
+```
+
+On the other hand, if you want *all* the possible combinations including reverse-duplicates, you could instead use [tidyr::expand_grid()](https://tidyr.tidyverse.org/reference/expand_grid.html) which will "create a tibble from all combinations of inputs". That'll include identical pairs, so you need to filter those out.
+
+```{r}
+obo_agg_variables_pairs_all <-
+  expand_grid(rows=obo_agg_variables_names, 
+              series=obo_agg_variables_names) |>
+  filter(rows != series)
+```
+
+```{r}
+obo_agg_variables_pairs_all
+```
+
+
+
+

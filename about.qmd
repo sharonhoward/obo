@@ -2,8 +2,21 @@
 title: "About"
 ---
 
-About this site
+## About this website
 
-```{r}
-1 + 1
-```
+This website is a resource for users of the [Old Bailey Online](https://www.oldbaileyonline.org/) who are interested in Digital Humanities, Data Science and computational approaches to the OBO's complex data.
+
+Initially, it will contain reference guides to using the new (2023) [OBO API](https://www.oldbaileyonline.org/about/api). I'd like to include material about useful tools and methods for processing data obtained via the API. And then we'll see.
+
+Code and data will also be available from the [Github repository](https://github.com/sharonhoward/obo)
+
+
+## About the author
+
+[Sharon Howard](https://sharonhoward.org) is a digital historian who has been involved with the Old Bailey Online project for almost 20 years, as project manager, researcher and data manager. 
+
+
+## About the Old Bailey Online
+
+The *Old Bailey Proceedings Online*, first launched in 2003 with subsequent major updates in 2008 and 2023, makes available a fully searchable, digitised collection of all surviving editions of the Old Bailey Proceedings from 1674 to 1913, and of the Ordinary of Newgate’s Accounts between 1676 and 1772. It allows access to over 197,000 trials and biographical details of approximately 2,500 men and women executed at Tyburn, free of charge for non-commercial use. See the [About the Project pages](https://www.oldbaileyonline.org/about/project) for more information about the project methods and evolution.
+

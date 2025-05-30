@@ -9,47 +9,55 @@ date: "2025-05-18"
 
 As part of a major overhaul and refresh of the [Old Bailey Online](https://www.oldbaileyonline.org/) in 2023, there were major breaking changes to the OBO API. The available [documentation](https://www.oldbaileyonline.org/about/api) for the new API is sparse, and these notes are intended to help users find their way around. 
 
-I cover two of the available API endpoints:
+I cover two of the available API endpoints here:
 
 -  https://www.dhi.ac.uk/api/data/oldbailey_record - for searching trials and other sections in the Old Bailey Proceedings
 -  https://www.dhi.ac.uk/api/data/oldbailey_record_single - for full data about individual trials and other sections in the Proceedings
 
-There are two other endpoints, one for Ordinary's Accounts and one for the Associated Records database. I haven't yet looked at these in any detail and may add further notes about them later, but would expect them to be similar.
+There are two other documented endpoints, one for Ordinary's Accounts and one for the Associated Records database. I haven't yet looked at these in any detail and may add further notes about them later, but would expect them to work in similar ways.
+
+There is a further undocumented feature for obtaining aggregated data. I'll cover that in [a separate post](./statistics-terms.qmd).
 
 See also [this worked example to search and download data from the API using R](./example-api.qmd).
+
+For further reference:
+
+- detailed background information about the search categories (offences, verdicts, sentences/punishments, victims and defendants) can be found [on the OBO website](https://www.oldbaileyonline.org/about/crime). 
+- all the OBO search forms have extensive contextual help which is also relevant for understanding the workings of the API. 
+
 
 
 ## Notes on search parameters
 
 The [official documentation](https://www.oldbaileyonline.org/about/api) only mentions keyword searching with the `text` parameter. These notes are intended to fill in some of the gaps for more structured searches of offences, etc.
 
-The crucial thing to know is that API query URLs mirror search results URLs on the website. 
+
+The crucial thing to know is that API URLs query strings mirror search results URLs on the website. 
 
 So, for example, the URL for the first page of results for a site search for the offence "killing":
 
-- https://www.oldbaileyonline.org/search/crime?offence=kill 
+- https://www.oldbaileyonline.org/search/crime**?offence=kill** 
 
 The corresponding api query url: 
 
-- https://www.dhi.ac.uk/api/data/oldbailey_record?offence=kill 
+- https://www.dhi.ac.uk/api/data/oldbailey_record**?offence=kill** 
 
-(Note: the /crime/ part of the website URL is not needed.)
+Note that the /crime/ segment of the website URL is not needed.
 
 
 So generally you should be able to test out queries on the website first to work out what parameters you need for API queries, and I'm not going to list a lot of examples here. 
+There could potentially be specific omissions/variations in the API that I'm not aware of, so I do recommend generally testing out results for whatever you want to do.
 
-(There could potentially be specific omissions in the API that I'm not aware of, so I recommend initially testing out results for whatever you want to do.) 
 
 
 ### pagination
 
-The example URL above will only get the first 10 results, but most searches will return more than that. The parameter for this is `from`.
+The example URL above will only get the first 10 results, but most searches return more than that. The parameter for subsequent pages is `from`. Numbering starts from 0, not 1.
 
-To get the second page of results: **from=10**
+Eg, to get the second page of results: **from=10**
 
-So, for the example above: https://www.dhi.ac.uk/api/data/oldbailey_record?offence=kill&from=10
+So, the second page for the example above: https://www.dhi.ac.uk/api/data/oldbailey_record?offence=kill&from=10
 
-(Note that numbering starts from 0, not 1.)
 
 
 
@@ -88,6 +96,7 @@ Pleaded guilty: **plea=guilty**
 
 I think all the old "pleaded" verdicts are still available under verdict and on a superficial inspection seem to get much the same results. 
 Eg **plea=guilty** and **verdict=pleadedGuilty** seem to get the same results. 
+
 However, this new option is the result of a fairly recent project and there may well be details I don't know about in the background information on the website. 
 
 
@@ -96,7 +105,7 @@ However, this new option is the result of a fairly recent project and there may 
 
 To restrict to trial texts only (ie excluding advertisements, supplementary, etc): **div_type=trialAccount**
 
-This probably won't matter when doing offence/verdict/sentence queries but will be more relevant for text queries.
+This is likely to make fairly slight differences when doing structured offence/verdict/sentence queries but will be more relevant for text queries. It's recommended if you want to be absolutely consistent and certain about where results come from.
 
 
 ### defendants and victims
@@ -197,7 +206,7 @@ jsonedit(sample_trial_json)
 
 A few notes about the major differences between new and old API.
 
-### changes to query URLs 
+### changes to URL query strings
 
 Previously for offences/verdicts/sentences in the URL it was always necessary to explicitly spell out category_subcategory. That's no longer necessary except in a few specific contexts (and it's done slightly differently).
 
@@ -223,8 +232,10 @@ The new API is in many ways more powerful than the old and with fewer limits, bu
 
 - the `terms` endpoint which gave a list of all the fields and values available in the API
 - the option (breakdown=[field]) for a breakdown of subcategories and so on for a search
-- the option (return=zip) to download zip archives of multiple trials XML
+- the option (return=zip) to download zip archives of multiple trials' XML
 
 The functionality can be reproduced but usually with some loss of convenience; if you have scripts using them you'll probably find that their replacements need to be longer and more complicated.
 
 The OBAPI demonstrator has also been withdrawn; this has no replacement.
+
+It used to be possible to specify the date of a particular session of the Proceedings (in fact, session dates may have been the *only* way to limit by date, though my memory is fuzzy on this). That no longer seems to be an option; there's only month and year. Month-year can often be used as a proxy for session date, but isn't completely perfect; after 1834 there could be more than one session in the same month.

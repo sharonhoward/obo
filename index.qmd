@@ -16,7 +16,8 @@ toc: false
 
 This website is a resource for users of the [Old Bailey Online](https://www.oldbaileyonline.org/) who are interested in Digital Humanities, Data Science and computational approaches to the OBO's complex data.
 
-I plan to write guides to using the [OBO API](https://www.oldbaileyonline.org/about/api), as well as useful tools and methods for processing data obtained via the API.
+I plan to write guides to using the new (2023) [OBO API](https://www.oldbaileyonline.org/about/api), as well as useful tools and methods for processing data obtained via the API.
+Caveat: some of this is work in progress; I'm still exploring the API and finding new features. Users should verify for themselves that my advice works for them.
 
 Code and data will also be available from the [Github repository](https://github.com/sharonhoward/obo)
 
