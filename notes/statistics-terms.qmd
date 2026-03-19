@@ -2,6 +2,7 @@
 title: "API terms and statistics"
 description: "How to get lists of query terms and counts of things in the OBO API"
 date: "2025-05-30"
+date-modified: "2026-03-19"
 author: "Sharon Howard"
 execute: 
   warning: false
@@ -12,7 +13,7 @@ execute:
 
 There were a couple of convenient features in the old OBAPI whose absence I've been asked about a number of times since the API changed. The first was the **terms** endpoint, which returned a JSON list of all the fields that could be queried, their types and possible values. The second was the `breakdown` parameter which could be added to API queries to include a frequency table of terms in the results, and was very handy for statistical analysis.
 
-Until very recently I thought there was no way to reproduce either functionality in the new API without constructing lists manually and/or running a lot of queries using the main search endpoint. And, as far as I know, there aren't any *exact* equivalents. But it turns out you can get (most of) the same information, plus more that wasn't queryable before. 
+At first I thought there was no way to reproduce either functionality in the new API without constructing lists manually and/or running a lot of queries using the main search endpoint. And, as far as I know, there aren't any *exact* equivalents. But it turns out you can get (most of) the same information, plus more that wasn't queryable before. 
 
 However, it's undocumented and not easy to use without some background knowledge about the underlying data and how search functions work. 
 So I'm writing this to fill in the gaps (and provide a resource that I can point enquirers to in the future).
@@ -45,8 +46,9 @@ library(jsonlite)
 library(listviewer)
 library(tidyverse)
 
+# 2026 update: new URL
 obo_offence_category_stats_csv <-
-  read_csv("https://www.dhi.ac.uk/api/data/csv/agg/oldbailey_offence?series=offence_category")
+  read_csv("https://www.dhi.ac.uk/api-proto/view/csv/agg/oldbailey_offence?series=offence_category")
 
 ```
 
@@ -59,7 +61,7 @@ obo_offence_category_stats_csv
 Let's test it out by running `breakingPeace` through an API search query. 
 
 ```{r}
-breaking_peace_json <- fromJSON("https://www.dhi.ac.uk/api/data/oldbailey_record?offence=breakingPeace&div_type=trialAccount")
+breaking_peace_json <- fromJSON("https://www.dhi.ac.uk/api-proto/view/oldbailey_record?offence=breakingPeace&div_type=trialAccount")
 ```
 
 That gets, as anticipated, the first ten results for offences in the top level category of Breaking Peace. The total trial `hits` (7465) are lower than the `doc_count` (7696).
@@ -75,11 +77,11 @@ I'm calling these `agg` queries to differentiate them from the API search and si
 
 After various tests and snafus, I worked out the key components of the URLs:
 
-- the fixed part of the URL is **https://www.dhi.ac.uk/api/data/csv/agg/**
+- the fixed part of the URL is **https://www.dhi.ac.uk/api-proto/view/csv/agg/**
 - the unit to count by is in the next path segment before the query string, eg **/oldbailey_offence**; it's always prefixed by "oldbailey_"
 - the important bits of the query string are `series` and `rows`
 
-NB: you may also see a `countby` in query strings when exploring searches. I don't advise using it in API queries; I tested it out quite a bit and I think it either doesn't do anything at all or the `oldbailey_*` path parameter always takes precedence.
+NB: you may also see a `countby` in query strings when exploring searches. I don't advise using it in API queries; I tested it out quite a bit and as far as I can tell it either didn't do anything at all (!) or the `oldbailey_*` path parameter takes precedence.
 
 
 
@@ -91,8 +93,9 @@ There are in fact six options: offence, verdict, punishment, defendant, victim a
 
 The OBO data is *not* simple tabular data. In any given trial, there can be multiple defendants, offences, verdicts, punishments and victims. So you can get (as seen with the `breakingPeace` query) very different results when you change what you count by, and the most appropriate choice is likely to depend on what kind of search or analysis you're doing. 
 
-We spent quite a while, way back in about 2008, discussing the most appropriate countby defaults for each search; if you run a few queries on the site changing the search category but keeping the default counts, you can see how it changes. The complexity of the statistics tool led us to write [a guide to its use](https://www.oldbaileyonline.org/about/doingstatistics).
+We spent quite a while, way back in about 2008, discussing the most appropriate countby defaults for each search; if you run a few queries on the site changing the search category but keeping the default counts, you can see how it changes. 
 
+In fact, the complexity of the statistics tool led us to write [a guide to its use](https://www.oldbaileyonline.org/about/doingstatistics).
 It doesn't become any less complex just because you interact it with it via the API rather than the search form on the site. 
 In some respects it needs even more care, because searches on the site return much more information about the search (in the display it tells you exactly what was counted and what it was counted by). The `agg` query downloads lose much of that context.
 Plus, when constructing an `agg` query, you have to specify what you want to count by; you can't just let the site do it for you. 
@@ -101,14 +104,15 @@ Let's look again at the offence categories query, and this time change to /oldba
 
 ```{r}
 obo_offence_trial_query <-
-  read_csv("https://www.dhi.ac.uk/api/data/csv/agg/oldbailey_trial?series=offence_category")
+  read_csv("https://www.dhi.ac.uk/api-proto/view/csv/agg/oldbailey_trial?series=offence_category")
 
 obo_offence_trial_query
 ```
 
 
 ```{r}
-breaking_peace_json$hits$total
+# 2026 update: add value to path
+breaking_peace_json$hits$total$value
 ```
 
 In summary:
@@ -145,7 +149,7 @@ Translating from the search form to `agg` query strings, the first search box is
 Let's say I'd like a breakdown of offence subcategories per year, counting by offence. 
 
 ```{r}
-agg_query_url <- "https://www.dhi.ac.uk/api/data/csv/agg/oldbailey_offence?rows=offence_subcategory&series=year"
+agg_query_url <- "https://www.dhi.ac.uk/api-proto/view/csv/agg/oldbailey_offence?rows=offence_subcategory&series=year"
 
 offence_subcategory_year_csv <- read_csv(agg_query_url)
 ```
@@ -177,7 +181,7 @@ date_stamp <- today() |> format('%Y%m%d')
 
 obo_agg_variables <-
 obo_agg_variables_csv |>
-  mutate(url = glue("https://www.dhi.ac.uk/api/data/csv/agg/oldbailey_trial?series={name}")) |>
+  mutate(url = glue("https://www.dhi.ac.uk/api-proto/view/csv/agg/oldbailey_trial?series={name}")) |>
   mutate(filename = glue("{name}-bytrial-{date_stamp}"))
 
 # pull out the variable names
@@ -231,7 +235,7 @@ Checking out one of the files:
 
 ```{r}
 obo_agg_punishment_category_csv <-
-  read_csv(here::here("outputs/csv/single/punishment_category-bytrial-20250529.csv"))
+  read_csv(here::here("outputs/csv/single/punishment_category-bytrial-20260319.csv"))
 
 obo_agg_punishment_category_csv
 ```
