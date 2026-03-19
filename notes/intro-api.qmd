@@ -9,10 +9,12 @@ date: "2025-05-18"
 
 As part of a major overhaul and refresh of the [Old Bailey Online](https://www.oldbaileyonline.org/) in 2023, there were major breaking changes to the OBO API. The available [documentation](https://www.oldbaileyonline.org/about/api) for the new API is sparse, and these notes are intended to help users find their way around. 
 
+*Update, March 2026:* There have been further changes to the API since I wrote these pages in 2025. Most noticeably, the original API URLs will no longer work in these R scripts (you'll get a 403 Forbidden error). So far I've also spotted at least one small (but breaking) change to the JSON; there may be more. There should not be any substantive changes to categories and so on, but I haven't checked in detail.
+
 I cover two of the available API endpoints here:
 
--  https://www.dhi.ac.uk/api/data/oldbailey_record - for searching trials and other sections in the Old Bailey Proceedings
--  https://www.dhi.ac.uk/api/data/oldbailey_record_single - for full data about individual trials and other sections in the Proceedings
+-  https://www.dhi.ac.uk/api-proto/view/oldbailey_record - for searching trials and other sections in the Old Bailey Proceedings
+-  https://www.dhi.ac.uk/api-proto/view/oldbailey_record_single - for full data about individual trials and other sections in the Proceedings
 
 There are two other documented endpoints, one for Ordinary's Accounts and one for the Associated Records database. I haven't yet looked at these in any detail and may add further notes about them later, but would expect them to work in similar ways.
 
@@ -40,7 +42,7 @@ So, for example, the URL for the first page of results for a site search for the
 
 The corresponding api query url: 
 
-- https://www.dhi.ac.uk/api/data/oldbailey_record**?offence=kill** 
+- https://www.dhi.ac.uk/api-proto/view/oldbailey_record**?offence=kill** 
 
 Note that the /crime/ segment of the website URL is not needed.
 
@@ -56,7 +58,7 @@ The example URL above will only get the first 10 results, but most searches retu
 
 Eg, to get the second page of results: **from=10**
 
-So, the second page for the example above: https://www.dhi.ac.uk/api/data/oldbailey_record?offence=kill&from=10
+So, the second page for the example above: https://www.dhi.ac.uk/api-proto/view/oldbailey_record?offence=kill&from=10
 
 
 
@@ -142,18 +144,18 @@ sample_trial_json <- fromJSON(here::here("outputs/t17000115-17.json"))
 
 Browse a sample of the search results JSON:
 
-
 ```{r}
 jsonedit(sample_search_json)
 ```
 
+
 ([search for housebreaking between 1700 and 1704](https://www.oldbaileyonline.org/search/crime?offence=housebreaking&year_gte=1700&year_lte=1704#results))
 
 
-The number of results (hits > total)
+The number of results (hits > total > value)
 
 ```{r}
-sample_search_json$hits$total
+sample_search_json$hits$total$value
 ```
 
 Trial IDs (hits > hits > _source > idkey) - needed to get full data of individual trials via the single record endpoint.

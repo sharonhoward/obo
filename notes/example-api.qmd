@@ -36,6 +36,10 @@ The XML files downloaded by the code contain the complete (complex) tagging for 
 
 ## Caveats
 
+### 2026 changes to the API
+
+In a fine example of the single biggest problem with using APIs, there have been some changes to the API since I wrote these pages in 2025. I've updated this page so it should work again and will be working through the other pages. Most noticeably, the original API URLs will no longer work in these R scripts (you'll get a 403 Forbidden error). They still work in some contexts, but I'm told the original version will go away altogether at some point. I've also spotted at least one small (but breaking) change to the JSON; there may be more. 
+
 ### downloading trials is not going to be speedy
 
 Fetching trials data is likely to take a while if you have more than a handful of results. It's advisable to test how many results your search will return [on the website](https://www.oldbaileyonline.org/search/crime) before running any of this code. (More generally, the website is the best place to test out and refine queries for the API.)
@@ -55,6 +59,7 @@ If there are 0 results and you expected more, first check your query for typos, 
 ### search limit 
 
 As far as I know the API is not rate-limited BUT the search has a hard limit of 10000 results (from=9990). Anything after that causes a server error. If your search has more than 10000 results you'll have to split it up into several smaller searches (eg by date) and combine again afterwards.
+
 
 
 ## Load packages and functions
@@ -146,7 +151,7 @@ https://www.oldbaileyonline.org/search/crime?offence=housebreaking&year_gte=1700
 
 The matching API query URL:
 
-https://www.dhi.ac.uk/api/data/oldbailey_record?offence=housebreaking&year_gte=1700&year_lte=1704
+https://www.dhi.ac.uk/api-proto/view/oldbailey_record?offence=housebreaking&year_gte=1700&year_lte=1704
 
 
 
@@ -156,9 +161,11 @@ query_offence <- "housebreaking"
 query_start_year <- "1700"
 query_end_year <- "1704"
 
+## 2026 change: new URLs
+
 # parse the search endpoint URL into its components
 query_url <-
-  parse_url("https://www.dhi.ac.uk/api/data/oldbailey_record")
+  parse_url("https://www.dhi.ac.uk/api-proto/view/oldbailey_record")
 
 # add the query parameters
 query_url$query <- 
@@ -172,17 +179,18 @@ search_url <- build_url(query_url)
 
 
 # endpoint url for single records (this doesn't need parsing)
-single_url <- "https://www.dhi.ac.uk/api/data/oldbailey_record_single"
+single_url <- "https://www.dhi.ac.uk/api-proto/view/oldbailey_record_single"
 
 
 # run the search to get first page of results
 search_json <-
   fromJSON(search_url)
 
+## 2026 change: add value to the path
 
 # how many hits?
 search_hits <-
-  search_json$hits$total
+  search_json$hits$total$value
 
 # how many pages is that?
 search_pages <-
@@ -200,7 +208,7 @@ search_hits
 ```{r}
 #| include: false
 
-# saved search JSON for reference
+# saved search JSON for reference. updated 2026.
 # write_json(search_json, here::here("outputs/housebreaking.json"), pretty=TRUE)
 
 ## sample trial JSON saved for reference
@@ -273,9 +281,13 @@ search_json$hits$hits$`_source` |>
   # extract the IDs from the json, which is more deeply nested than the first. 
   # this code could probably be improved because my grasp of this stuff is a bit ropey
   # I make extensive use of the purrr lessons at https://jennybc.github.io/purrr-tutorial/index.html
+  # change 2026: swap round first two map lines for hits.
+      # previously
+      # map(search_json_pages, `[`, "hits" ) |>
+      # map("hits") |> # or could use flatten()
   search_ids_pages <-
-  map(search_json_pages, `[`, "hits" ) |>
-  map("hits") |> # or could use flatten()
+  map(search_json_pages,  "hits" ) |>
+  map(`[`, "hits") |>
   # bind_rows flattens into a single df with hits as a list-column. i don't know why, it just does.
   bind_rows() |>
   unnest(hits) |>
@@ -331,8 +343,6 @@ results_txt <-
 # note use of purrr::pmap() https://purrr.tidyverse.org/reference/pmap.html
 # invisible() stops printing out of console messages which can get a bit much after the n-hundredth time
 
-# why is this not working?? check function agt original i suppose
-
 # write xml
 invisible(
   list(
@@ -363,6 +373,15 @@ write_csv(results_metadata, paste0(here::here("outputs"), "/", query_offence, ".
 
 } 
 
+```
+
+
+```{r}
+#| include: false
+
+# save a copy of second page json for reference
+# search_json_pages |>
+#   write_json(here::here("outputs/housebreaking_page2.json"), pretty=TRUE)
 ```
 
 

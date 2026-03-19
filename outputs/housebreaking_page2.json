@@ -1,0 +1,69 @@
+[
+  {
+    "took": [2],
+    "timed_out": [false],
+    "_shards": {
+      "total": [1],
+      "successful": [1],
+      "skipped": [0],
+      "failed": [0]
+    },
+    "hits": {
+      "total": {
+        "value": [14],
+        "relation": ["eq"]
+      },
+      "max_score": {},
+      "hits": [
+        {
+          "_index": "dhids_oldbailey_record_202601230947",
+          "_type": "_doc",
+          "_id": "VQZTBJwBAcJhZ-ehlWvy",
+          "_source": {
+            "idkey": "t17021014-23",
+            "images": ["https://www.dhi.ac.uk/san/ob/1700s/17021014004.gif"],
+            "text": "Elizabeth Smith was indicted for a Misdemeanour for breakings the House of John Walters , in the day time, with intention to steal his Goods while a little Girl went out to fetch a pint of Drink, in the mean time the Prisoner came and opened the Door; but the Girl returning, she was for getting away, but the Girl laid hold of her, and cried out, and People coming, they took her, and found a pick-lock key in her Bosom, which lock'd and unlock'd the Door very well. It was fully proved, the Jury fo",
+            "title": "Elizabeth Smith. Theft; housebreaking. 14th October 1702."
+          },
+          "sort": [-8432553600000, 23]
+        },
+        {
+          "_index": "dhids_oldbailey_record_202601230947",
+          "_type": "_doc",
+          "_id": "GAVRBJwBAcJhZ-ehzKNj",
+          "_source": {
+            "idkey": "t17040308-31",
+            "images": ["https://www.dhi.ac.uk/san/ob/1700s/17040308004.gif"],
+            "text": "Mary Dale, alias Brown , of the Parish of St. Margarets Westminster , was indicted for Breaking the House of Mary Jasper , Widow , on the 9th of January last, in the Day-time, and taking thence two pair of Flaxen Sheets, 6 Holland Shirts, and 8 Napkins, and divers other Goods . The Prosecutor said he lost his Goods: And another Evidence deposed, That she and the Prisoner committed the Fact; but said, that the Window was not fast, and that the Prisoner did take out the Goods, and they went away t",
+            "title": "Mary Dale. Theft; housebreaking. 8th March 1704."
+          },
+          "sort": [-8388403200000, 31]
+        },
+        {
+          "_index": "dhids_oldbailey_record_202601230947",
+          "_type": "_doc",
+          "_id": "2wZUBJwBAcJhZ-ehp-Ld",
+          "_source": {
+            "idkey": "t17040426-47",
+            "images": ["https://www.dhi.ac.uk/san/ob/1700s/17040426005.gif"],
+            "text": "Mary Johnson, alias Howard , of the Parish of St. Giles's in the Fields , was indicted for Robbing the House of Mary Guy in the Daytime, no Person being therein, and taking thence a Stuff-Pettycoat, a Fustian Wast-Coat, and divers other Goods , on the 8th of April last; there was no Evidence against him, he was acquitted .",
+            "title": "Mary Johnson. Theft; housebreaking. 26th April 1704."
+          },
+          "sort": [-8384169600000, 47]
+        },
+        {
+          "_index": "dhids_oldbailey_record_202601230947",
+          "_type": "_doc",
+          "_id": "kAVRBJwBAcJhZ-ehtJjg",
+          "_source": {
+            "idkey": "t17040601-33",
+            "images": ["https://www.dhi.ac.uk/san/ob/1700s/17040601004.gif"],
+            "text": "Judith Browne , and Mary Farrel , of the Parish of St. Anns Westminster , was indicted for breaking the House of John Fosset on the 20th of May last, in the Day time, no Person being therein, and taking thence 3 Holland-Sheets, and divers other Goods . It appeared that the Goods were found upon Farrell when taken, and nothing upon Brown , and there being no Evidence to the breaking the House, the Jury found Farrel Guilty to the value of 10 d. [Whipping. See summary.]",
+            "title": "Judith Browne. Mary Farrel. Theft; housebreaking. 1st June 1704."
+          },
+          "sort": [-8381059200000, 33]
+        }
+      ]
+    }
+  }
+]

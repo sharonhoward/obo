@@ -2,19 +2,22 @@
   "took": [6],
   "timed_out": [false],
   "_shards": {
-    "total": [5],
-    "successful": [5],
+    "total": [1],
+    "successful": [1],
     "skipped": [0],
     "failed": [0]
   },
   "hits": {
-    "total": [14],
+    "total": {
+      "value": [14],
+      "relation": ["eq"]
+    },
     "max_score": {},
     "hits": [
       {
-        "_index": "dhids_oldbailey_record",
-        "_type": "doc",
-        "_id": "AYxEMKr-Pld_y58Rz-WX",
+        "_index": "dhids_oldbailey_record_202601230947",
+        "_type": "_doc",
+        "_id": "RQVSBJwBAcJhZ-ehmv6G",
         "_source": {
           "idkey": "t17000115-17",
           "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000115002.gif"],
@@ -24,9 +27,9 @@
         "sort": [-8519126400000, 17]
       },
       {
-        "_index": "dhids_oldbailey_record",
-        "_type": "doc",
-        "_id": "AYxEMKr-Pld_y58Rz-Wb",
+        "_index": "dhids_oldbailey_record_202601230947",
+        "_type": "_doc",
+        "_id": "SQVSBJwBAcJhZ-ehmv6G",
         "_source": {
           "idkey": "t17000115-21",
           "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000115003.gif"],
@@ -36,9 +39,9 @@
         "sort": [-8519126400000, 21]
       },
       {
-        "_index": "dhids_oldbailey_record",
-        "_type": "doc",
-        "_id": "AYxEMsJtPld_y58R0LY1",
+        "_index": "dhids_oldbailey_record_202601230947",
+        "_type": "_doc",
+        "_id": "3gZUBJwBAcJhZ-ehds4k",
         "_source": {
           "idkey": "t17000828-4",
           "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000828001.gif"],
@@ -48,9 +51,9 @@
         "sort": [-8499686400000, 4]
       },
       {
-        "_index": "dhids_oldbailey_record",
-        "_type": "doc",
-        "_id": "AYxEMsJtPld_y58R0LY-",
+        "_index": "dhids_oldbailey_record_202601230947",
+        "_type": "_doc",
+        "_id": "5wZUBJwBAcJhZ-ehds4k",
         "_source": {
           "idkey": "t17000828-13",
           "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000828002.gif"],
@@ -60,9 +63,9 @@
         "sort": [-8499686400000, 13]
       },
       {
-        "_index": "dhids_oldbailey_record",
-        "_type": "doc",
-        "_id": "AYxEMsJtPld_y58R0LY_",
+        "_index": "dhids_oldbailey_record_202601230947",
+        "_type": "_doc",
+        "_id": "6AZUBJwBAcJhZ-ehds4k",
         "_source": {
           "idkey": "t17000828-14",
           "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000828002.gif"],
@@ -72,9 +75,9 @@
         "sort": [-8499686400000, 14]
       },
       {
-        "_index": "dhids_oldbailey_record",
-        "_type": "doc",
-        "_id": "AYxEMsJtPld_y58R0LZN",
+        "_index": "dhids_oldbailey_record_202601230947",
+        "_type": "_doc",
+        "_id": "9gZUBJwBAcJhZ-ehds4k",
         "_source": {
           "idkey": "t17000828-28",
           "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000828003.gif"],
@@ -84,9 +87,9 @@
         "sort": [-8499686400000, 28]
       },
       {
-        "_index": "dhids_oldbailey_record",
-        "_type": "doc",
-        "_id": "AYxELPgyPld_y58RzoJC",
+        "_index": "dhids_oldbailey_record_202601230947",
+        "_type": "_doc",
+        "_id": "9QRPBJwBAcJhZ-ehYZoV",
         "_source": {
           "idkey": "t17000828-29",
           "images": ["https://www.dhi.ac.uk/san/ob/1700s/17000828003.gif", "https://www.dhi.ac.uk/san/ob/1700s/17000828004.gif"],
@@ -96,9 +99,9 @@
         "sort": [-8499686400000, 29]
       },
       {
-        "_index": "dhids_oldbailey_record",
-        "_type": "doc",
-        "_id": "AYxEMcRTPld_y58R0FKa",
+        "_index": "dhids_oldbailey_record_202601230947",
+        "_type": "_doc",
+        "_id": "QwZTBJwBAcJhZ-ehlWvy",
         "_source": {
           "idkey": "t17021014-5",
           "images": ["https://www.dhi.ac.uk/san/ob/1700s/17021014002.gif"],
@@ -108,9 +111,9 @@
         "sort": [-8432553600000, 5]
       },
       {
-        "_index": "dhids_oldbailey_record",
-        "_type": "doc",
-        "_id": "AYxEMcRTPld_y58R0FKe",
+        "_index": "dhids_oldbailey_record_202601230947",
+        "_type": "_doc",
+        "_id": "RwZTBJwBAcJhZ-ehlWvy",
         "_source": {
           "idkey": "t17021014-9",
           "images": ["https://www.dhi.ac.uk/san/ob/1700s/17021014002.gif"],
@@ -120,9 +123,9 @@
         "sort": [-8432553600000, 9]
       },
       {
-        "_index": "dhids_oldbailey_record",
-        "_type": "doc",
-        "_id": "AYxEMcRTPld_y58R0FKo",
+        "_index": "dhids_oldbailey_record_202601230947",
+        "_type": "_doc",
+        "_id": "UQZTBJwBAcJhZ-ehlWvy",
         "_source": {
           "idkey": "t17021014-19",
           "images": ["https://www.dhi.ac.uk/san/ob/1700s/17021014003.gif"],
